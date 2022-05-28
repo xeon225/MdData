@@ -80,22 +80,14 @@ Organization			机构
 
 a commercial		  商业视角
 
-Good morning , Iadies and gentlemen ! 
-It I5 really my honor to have this opportunity for this interview . 
-I hope I can make a good performance today . 
-I ' m confident that I can succeed . 
-Now , I will introduce myself briefly . I am x years old , born in Shandong province . 
-I graduated from Qiingdao University with an electronic maior . 
-I graduated with a bachelor , 5 degree in xx . During my college years , 
-I studied hard and passed Band Six test in College English . 
-I mastered basic professional knowledge Becomjng an electronic engineer I5 my dream for a Iong time . 
-I Iong for the chance to use my talents . 
-In July XX , I worked as a technical assistant engineer in a small Private Companies in Qingdao . 
-5 ince my talent was not enough , I declded to change my job . In August XX , 
-I went to Beijing to work as a foreign capital enterprise Software test engineer . 
-Because I want to change my working environment and try to find a Job which I5 more challenging . 
-And I think Motorola I5 an international company , and I can get more in such a working environment . 
-That I5 lhe reason that I come here for the interview . I thinkl " m a good team player and a person of great honesty to others . 
-Also . I am able Ie to work under great pressure . 
-I am very confident that I am qualified for the position of engineer in the company . 
+Good morning , Iadies and gentlemen ! My name is Wanglei. It is really my honor to have this opportunity for this interview. I hope I can make a good performance today. I'm confident that I can succeed. Now, I will introduce myself briefly . I graduated from Beijing Jiaotong University with an Computer Science and Technology. 
+
+Early work involved in website development. Use Asp.net PHP mysql development mode. After that, I was engaged in front-end development of HTML + CSS + JS for almost 10 years
+ 
+In the past five years, I focused on htM5 + CSS3 + VUE development and component development.  I used SASS structure layout to generate style library similar to CMUI and cooperated with SVG Sprite to create font library.  On this basis, various UI components and interactive functional components are developed.  The goal is to develop a set of front-end UI framework CLI. 
+ 
+Personal preference UI front-end direction using SASS structure layout, using VUE to develop adaptive cross-platform CSS3 framework or UI class library, can be applied to PC, mobile, mini programs.
+
+I think Fidelity is an international company , and I can get more in such a working environment .   That is lhe reason that I come here for the interview .   I think l'm a good team player and a person of great honesty to others .   Also, I am able Ie to work under great pressure .   I am very confident that I am qualified for the position of Front End engineer in the company .
+
 Thank you for giving me this opportunity .
