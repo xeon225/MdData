@@ -20,6 +20,10 @@ T:Type of person you are
 
 Thank you for giving me the **opportunity** to **be interviewed** for this **position** today. Having studied the **job description**, I am **confident** I have the **skills**, the **qualities**, and the **qualifications** needed to excel in the role
 
+感谢您今天给我机会接受这个职位的面试，在读了职位描述之后，我相信我拥有在该职位中脱颖而所需的技能，素质和资格。
+
+
+
 #### 重点
 
 Opportunity		机会，时机
@@ -41,6 +45,8 @@ Qualification		资格
 Excel in				在......方面胜过/擅长
 
 I am a **fast learner**. I **possess excellent problem-solving capbailities**, and I can manage a **significant workload**
+
+我学东西很快（学习能力强）。我拥有出色的解决问题的能力，我可以处理大量的工作量。
 
 #### 重点
 
@@ -79,3 +85,23 @@ Benefit					有益于
 Organization			机构
 
 a commercial		  商业视角
+
+
+
+Honor['ɔnə]				荣誉；信用；头衔
+opportunity [,ɔpə'tju:niti]	 时机，机会
+interview ['intəvju:]		面试
+performance [pə'fɔ:məns]	表现
+confident[ˈkɑːnfɪdənt]	自信的
+introduce[,intrə'dju:s]	介绍
+briefly ['bri:fli]				简短的
+graduated ['ɡrædjueitid, -dʒu-]	大学毕业
+university [,ju:ni'və:səti]	大学
+science ['saiəns]			技术
+
+
+
+
+
+
+
