@@ -22,23 +22,28 @@
     }
 </style>
 <script>
-    const data = {}
-    let name = 'vue'
-    
-    Object.defineProperty(data, 'name', {
-        get: function() {
-            console.log('get')
-            return name;
-        },
-        set: function(newValue) {
-            console.log('set')
-            name = newValue;
-        }
+    var a = 18
+    function age() {
+    console.log(this.a)
     }
+    age()
+    // const data = {}
+    // let name = 'vue'
     
-    )
-    console.log(data.name);
-    data.name = 'hi'
-    console.log(data.name);
+    // Object.defineProperty(data, 'name', {
+    //     get: function() {
+    //         console.log('get')
+    //         return name;
+    //     },
+    //     set: function(newValue) {
+    //         console.log('set')
+    //         name = newValue;
+    //     }
+    // }
+    
+    // )
+    // console.log(data.name);
+    // data.name = 'hi'
+    // console.log(data.name);
     </script>
 </html>
