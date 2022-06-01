@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="aaa">
+
+    </div>
+</body>
+<style>
+    .aaa{
+        width: 0;
+        height: 0;
+        border-top:40px solid transparent;
+        border-right:40px solid transparent;
+        border-left:40px solid transparent;
+        border-bottom:40px solid #000;
+    }
+</style>
+<script>
+    const data = {}
+    let name = 'vue'
+    
+    Object.defineProperty(data, 'name', {
+        get: function() {
+            console.log('get')
+            return name;
+        },
+        set: function(newValue) {
+            console.log('set')
+            name = newValue;
+        }
+    }
+    
+    )
+    console.log(data.name);
+    data.name = 'hi'
+    console.log(data.name);
+    </script>
+</html>
