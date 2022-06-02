@@ -43,6 +43,14 @@ ECMAScript(基础语法)、web APIs(DOM、BOM)
 不能以数字开头
 不用使用关键字
 
+##### 表达式
+
+var a =1
+a > 2 || a = 2  //左边为false，执行右边
+a > 2 && a = 2	//左边为true，执行右边
+
+
+
 #### 函数
 
 函数的概念
@@ -81,6 +89,14 @@ ECMAScript(基础语法)、web APIs(DOM、BOM)
 1、我们函数只是实现某种功能，最终的结果需要返回给函数的调用者函数名()通过return实现的。
 2、只要函数遇到return就把后面的结果返回给函数的调用者。函数名() = return后面的结果。
 
+只能返回一个值，是最后一个值
+函数都有返回值，有return返回它后面的值，没有return返回undefined
+
+**Break，continue，return的区别**
+
+break结束当前的循环体
+continue结束本次循环，继续执行下次循环
+return不仅可以退出循环，还能够返回return语句中的值。同时还可以结束当前的函数体内的代码。
 
 **arguments**的使用
 
