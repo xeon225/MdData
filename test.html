@@ -60,7 +60,48 @@
             }
             return max
         }
-        console.log(getMax(123,1233,1,5,12,345))
+        //翻转任意数组
+        function reverse(arr){
+            var newArr = []
+            var arrLength = arr.length
+            // for (i = 0; i < arrLength; i++){
+            //     newArr[i] = arr[arrLength - 1 - i]
+            // }
+            for (i = arrLength - 1; i >= 0; i--){
+                newArr[newArr.length] = arr[i]
+            }
+            return newArr
+        }
+        //冒泡任意数组
+        function sort(arr) {
+            var num
+            var a = 1
+            for (i = 0; i < arr.length - 1; i++){
+                for(j = 0; j < arr.length - i - 1; j++){
+                    if(arr[j] > arr[j+1]){
+                        num = arr[j]
+                        arr[j] = arr[j+1]
+                        arr[j+1] = num
+                    }
+                }
+            }
+            return arr
+                
+        }
+        //判断润年
+        function isRunYear(year){
+            var re
+            return year % 4 === 0 && !(year % 100 === 0) || year % 400 === 0 ? '是润年' : '不是润年'
+        }
+        //递归
+        function factorial(n){
+            if (n === 0) {
+                return 1
+            }
+            return n * factorial(n - 1)
+        }
+        
+        console.log(factorial(4))
 </script>
 </body>
 </html>
