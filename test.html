@@ -101,7 +101,17 @@
             return n * factorial(n - 1)
         }
         // console.log(factorial(4))
-
+        function Lol(uname, st, hp) {
+            this.uname = uname;
+            this.st = st;
+            this.hp = hp;
+            this.skill = function(n) {
+                return '绝技' + n
+            }
+        }
+        var name1 = new Lol('廉颇', 100, 2000,)
+        var name2 = new Lol('火女', 200, 1000)
+        console.log(name1.skill('火球'))
 </script>
 </body>
 </html>
