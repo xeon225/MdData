@@ -75,7 +75,6 @@
         //冒泡任意数组
         function sort(arr) {
             var num
-            var a = 1
             for (i = 0; i < arr.length - 1; i++){
                 for(j = 0; j < arr.length - i - 1; j++){
                     if(arr[j] > arr[j+1]){
@@ -111,7 +110,53 @@
         }
         var name1 = new Lol('廉颇', 100, 2000,)
         var name2 = new Lol('火女', 200, 1000)
-        console.log(name1.skill('火球'))
+        //遍历对象
+        function eachArr(){
+            var obj = {
+                name: '火火',
+                age: 20,
+                sex: 'boy',
+                fn: function(){}
+            }
+            for(var k in obj){
+                console.log(k,obj[k])
+            }
+        }
+        //封装一个数学方法
+        // console.log(Math.max(1))
+        var myMath = {
+            PI : 3.131592653,
+            max : function () {
+                var max = arguments[0]
+                for (i = 1; i < arguments.length; i++){
+                    max < arguments[i] && (max = arguments[i])
+                }
+                return max
+            },
+            min : function () {
+                var min = arguments[0]
+                for (i = 1; i < arguments.length; i++){
+                    min > arguments[i] && (min = arguments[i])
+                }
+                return min
+            },
+            abs : function () {
+                var n = Number(arguments[0])
+                if (n > 0) {
+                    return n
+                } else if (n < 0) {
+                    return - n
+                }
+                return n
+            }
+        }
+        function getRandom(min, max) {
+            min = Math.ceil(min)
+            max = Math.floor(max)
+            return Math.floor(Math.random() * (max - min + 1)) + min
+        }
+        var arr = [1231,3,3424,123,45,323,1312,4545,'dfdf','234']
+        console.log(arr[getRandom(1, 10)-1])
 </script>
 </body>
 </html>
