@@ -212,8 +212,29 @@
             return '倒计时还有'+d+'天'+h+'小时'+m+'分'+s+'秒'
         }
         // console.log(timestamp())
-        var arr = true
-        console.log(arr instanceof Blob)
+        //筛选数组
+        function screenArray(){
+            var arr = [4,3,23,4,7,5]
+            arr.sort((a, b) => {a - b})
+            console.log(arr)
+            var newArr = []
+            for (var i = 0; i < arr.length; i++){
+                if (arr[i] > 3){
+                    newArr.push(arr[i])
+                }
+            }
+            return newArr
+        }
+        // console.log(screenArray())
+        //数组去重
+        function removal(arr){
+            var newArr = new Array()
+            for (var i = 0; i < arr.length; i++){
+                newArr.indexOf(arr[i]) === -1 && newArr.push(arr[i])
+            }
+            return newArr
+        }
+        console.log(removal([1, 1, 2, 2, 4, 5, 6, 7, 8, 8, 9, 10, 10]))
 </script>
 <div class="flex">
     <div style="background-color: red;">123123</div>
