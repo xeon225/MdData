@@ -155,8 +155,79 @@
             max = Math.floor(max)
             return Math.floor(Math.random() * (max - min + 1)) + min
         }
-        var arr = [1231,3,3424,123,45,323,1312,4545,'dfdf','234']
-        console.log(arr[getRandom(1, 10)-1])
+        function cNum(){
+            var n = prompt('请输入数字');
+            var r = getRandom(1, 10);
+            var i = 1;
+            while(true){
+                if (i >= 3) {
+                    console.log('你没有机会了');
+                    break;
+                }
+                ++i
+                if (n > r) {
+                    console.log(r)
+                    n = prompt('大了，重新输入');
+                } else if (n < r) {
+                    console.log(r)
+                    n = prompt('小了，重新输入');
+                } else {
+                    console.log('猜对了');
+                    break;
+                }
+                
+            }
+        }
+        //格式化日期
+        function dateFormat(){
+            var formatDate = {
+                formatNum : function(n){
+                    return n.length == 2 ? n : '0' + n
+                },
+                weekDay : ['日','一','二','三','四','五','六'],
+                theme1 : function(d) {
+                    return d.getFullYear()+'/'+this.formatNum(d.getMonth()+1)+'/'+this.formatNum(d.getDate())
+                },
+                theme2 : function(d) {
+                    return d.getFullYear()+'-'+this.formatNum(d.getMonth()+1)+'-'+this.formatNum(d.getDate())
+                },
+                theme3 : function(d) {
+                    return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+this.weekDay[d.getDay()]
+                }
+            }
+            var date = new Date()
+            var d = formatDate.theme3(date)
+        }
+        
+        //时间戳
+        function timestamp() {
+            var date = +new Date();
+            var nextDate = new Date('2022-6-7 18:00:00')
+            var countdown = nextDate.getTime() - date
+            countdown/=1000
+            var d = parseInt(countdown / 60 / 60 / 24)
+            var h = parseInt(countdown / 60 / 60 % 24)
+            var m = parseInt(countdown / 60 % 60)
+            var s = parseInt(countdown % 60)
+            return '倒计时还有'+d+'天'+h+'小时'+m+'分'+s+'秒'
+        }
+        // console.log(timestamp())
+        var arr = true
+        console.log(arr instanceof Blob)
 </script>
+<div class="flex">
+    <div style="background-color: red;">123123</div>
+</div>
 </body>
+<style>
+    html,body{
+        height:100%;
+    }
+    .flex{
+        height:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 </html>

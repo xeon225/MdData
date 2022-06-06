@@ -232,3 +232,27 @@ Math对象不是构造函数，它具有数学常数和函数的属性和方法�
 Math.random()
 
 > 取随机数，random()返回一个随机的小数，范围	0 =< x < 1
+
+**var date = new Date()**
+
+时间戳
+获取Date总的毫秒数，距离1970.1.1过了多少毫秒。
+1、通过 valueOf()	getTime()	获得
+2、var 总毫秒 = +new Date()		获得
+3、H5新增获得总的毫秒数	Date.now()
+
+##### 创建数组
+
+1、利用数组字面量
+````
+var arr = [1, 2, 3]
+````
+
+2、利用new Array()
+
+````
+var arr = new Array()
+````
+
+检测是否为数组
+1、instanceof 运算符
