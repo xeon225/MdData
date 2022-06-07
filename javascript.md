@@ -295,6 +295,8 @@ var arr = [1, 2, 3]
 arr.reverse()				//arr = [3, 2, 1]
 ````
 
+参数不是数组类型，返回为空。
+
 2、数组顺序	sort()
 
 ````
@@ -316,3 +318,78 @@ arr1.sort(function(a, b){
 > 如果不存在，返回的是 -1。
 
 2、lastIndexOf(数组元素)，从后面开始查找。功能与indexOf()一样。相同元素它只返回最后一个满足条件和索引号。
+
+**数组转换为字符串**
+1、toString()将我们的数组转换为字符串。
+
+````
+var arr = [1, 2, 3];
+arr.toString();				//1,2,3
+````
+
+2、join(分隔符)
+
+````
+var arr = [1, 2, 3];
+arr.join();						//1,2,3
+arr.join('-');				//1-2-3
+````
+
+3、concat()合并数组
+
+````
+var arr1 = [1, 2, 3];
+var arr2 = [4, 5, 6];
+var arr3 = arr1.concat(arr2);						//[1, 2, 3, 4, 5, 6]
+var arr4 = arr1.concat('字符串', arr2)		//[1, 2, 3, '字符串', 4, 5, 6]
+````
+
+> var newArr = arr1.concat(arr1, arr2, arr3...)
+
+4、slice(begin, end)数组截取
+
+````
+var arr1 = [1, 2, 3, 4, 5, 6];
+var newArr = arr1.slice(1, 3);					//[2, 3]
+````
+
+> 截取范围start-end，截取部分包含start，但没有end部分。
+> var arr = [1, 2, 3, 4, 5]	arr.slice(0,3)	结果是[0, 1, 2]
+
+5、splice(begin, length)数据删除
+
+````
+var arr = [1, 2, 3, 4, 5, 6];
+var newArr = arr.splice(1, 2);				//[2, 3]   删除第2，第3的元素返回新数组
+arr.splice(4, 0, '字符串');			//[1, 2, 3, 4, '字符串', 5, 6]
+arr.splice(3, 1, '字符串')；		//[1, 2, 3, '字符串', 5, 6]  替换了第4个元素
+````
+
+> Splice()数据删除会改变原来的数组
+
+**基本包装类型**
+就是把简单数据类型包装成为复杂数据类型，这样基本数据类型就有了属性和方法。
+
+````
+var temp = new String('andy');		//生成临时变量，把简单类型包装为复杂数据类型
+str = temp;						//赋值给我们声明的字符变量
+temp = null;					//销毁临时变量
+````
+
+**字符串的不可变**
+指的是里面的值不可变，虽然看上去可以改变内容，但其实是地址变了，内存中断开辟了一个内容空间。
+
+**Indexof('查找的字符', [起始的位置])**
+字符串，字符返回位置
+从索引号的位置往后查找
+
+**lastIndexOf()**
+功能与indexOf()一样，区别是从后往前找。只找第一个匹配的。
+
+**charAt(index)**
+根据位置返回字符
+
+> Str[index]H5新增的，功能和charAt一样
+
+**charCodeAt(index)**
+返回相应索引号的字符ASCII值，目地：判断用户按下了那个键。

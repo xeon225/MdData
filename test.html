@@ -234,7 +234,46 @@
             }
             return newArr
         }
-        console.log(removal([1, 1, 2, 2, 4, 5, 6, 7, 8, 8, 9, 10, 10]))
+        //字符串或数组出现所有位置和次数
+        function indexOfNum(content, text){ //内容  和  查找字
+            var num                         //起始数
+            var posi = []                   //所有位置
+            while(true){
+                num = content.indexOf(text, num)
+                if(num != -1){
+                    posi.push(num)
+                    num += 1
+                } else {
+                    break;
+                }
+            }
+            console.log(posi, posi.length)
+        }
+        var str = 'adsfasdfasdfaaadfdfalda'
+        // var iOf = 'a'
+        // var arr = ['a', 'b', 'c','a', 'b', 'c','a', 'b', 'c','a', 'b', 'c']
+        // indexOfNum(arr, iOf)
+        //遍历所有的字符
+        function charAtString(str){
+            var newArr = {}
+            var max = 0
+            var mname
+            for(var i = 0; i < str.length; i++){
+                if (newArr[str.charAt(i)]) {
+                    newArr[str.charAt(i)] ++
+                } else {
+                    newArr[str.charAt(i)] = 1
+                }
+            }
+            for(k in newArr){
+                if (max < newArr[k]){
+                    max = newArr[k]
+                    mname = k
+                }
+            }
+            console.log(newArr,mname,max)
+        }
+        charAtString(str)
 </script>
 <div class="flex">
     <div style="background-color: red;">123123</div>
