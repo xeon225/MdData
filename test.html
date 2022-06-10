@@ -202,7 +202,7 @@
         //时间戳
         function timestamp() {
             var date = +new Date();
-            var nextDate = new Date('2022-6-7 18:00:00')
+            var nextDate = new Date('2022-6-20 18:00:00')
             var countdown = nextDate.getTime() - date
             countdown/=1000
             var d = parseInt(countdown / 60 / 60 / 24)
@@ -249,7 +249,7 @@
             }
             console.log(posi, posi.length)
         }
-        var str = 'adsfasdfasdfaaadfdfalda'
+        // var str = 'adsfasdfasdfaaadfdfalda'
         // var iOf = 'a'
         // var arr = ['a', 'b', 'c','a', 'b', 'c','a', 'b', 'c','a', 'b', 'c']
         // indexOfNum(arr, iOf)
@@ -273,21 +273,159 @@
             }
             console.log(newArr,mname,max)
         }
-        charAtString(str)
+        //替换字符串里的字符
+        var str = 'abaasdffggghhjjkkgfddsssss3444343'
+        function replaceStr(str){
+            var str = str
+            while(str.indexOf('a') >= 0){
+                str = str.replace('a', '*')
+            }
+            console.log(str)
+        }
+
+        //字符串案例
+        function strAll(str){
+            var str = str
+            var charAtPosi = [0, 3, 5, 9]
+            var charAtArr = []
+            var indexOfStr = ['i', 'c', 'b']
+            var replaceArr = {
+                g : '22',
+                ss : 'b'
+            }
+            var newArr = {}
+            var replaceStr = str
+            var max = 0
+            var mname
+            //指定位置字符串
+            for(var i = 0; i < charAtPosi.length; i++){
+                charAtArr.push(str.charAt(charAtPosi[i]))
+            }
+            //查找是否存在的字符
+            for(var i = 0; i < indexOfStr.length; i++){
+                if (str.indexOf(indexOfStr[i]) !== -1){
+                    indexOfStr[i] = indexOfStr[i] + '存在字符串'
+                } else {
+                    indexOfStr[i] = indexOfStr[i] + '不存在字符串'
+                }
+            }
+            //替换字符
+            for(k in replaceArr){
+                while(replaceStr.indexOf(k) !== -1){
+                    replaceStr = replaceStr.replace(k, replaceArr[k])
+                }
+            }
+            for(var i = 0; i < str.length; i++){
+                if(newArr[str.charAt(i)]){
+                    newArr[str.charAt(i)]++
+                } else {
+                    newArr[str.charAt(i)] = 1
+                }
+            }
+            for(k in newArr){
+                if(newArr[k] > max) {
+                    max = newArr[k]
+                    mname = k
+                }
+            }
+            console.log(newArr)
+
+
+
+            console.log('字符串', str)
+            console.log('1、字符串的长度', str.length)
+            console.log('2、指定位置'+charAtPosi+'的字符', charAtArr)
+            console.log('3、查找字符 '+indexOfStr)
+            console.log('4、替换字符g为22、ss为b '+replaceStr)
+            console.log('5、截取1-5的字符串 '+str.slice(1, 5))
+            console.log('6、字符串出现最多的字符是 '+mname+':'+max)
+        }
+
+
+        // strAll(str)
+        
 </script>
-<div class="flex">
-    <div style="background-color: red;">123123</div>
-</div>
+<article id="aa">
+    <div class="aaa">
+        <div id="title"></div>
+        <img id="img" src="img/01.jpg" width="400" alt="">
+        <div id="from">
+            <button>按钮</button>
+            <input class="input1" type="text" value="xeon">
+            <span>输入6-16位置</span>
+        </div>
+    </div>
+    <div class="content">
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+    </div>
+</article>
+<script>
+    function img(){
+        var date = new Date()
+        var h = date.getHours()
+        var img = document.getElementById('img')
+        var title = document.querySelector('#title')
+        if(h < 12){
+            img.src = 'img/01.jpg'
+            title.innerText = '上午了'
+        } else {
+            img.src = 'img/02.jpg'
+            title.innerText = '下午了'
+        }
+    }
+    function from(){
+        var input = document.querySelector('#from input')
+        var mess = document.querySelector('#from span')
+        input.onblur = function() {
+            console.log(this.value.length)
+            if (this.value.length < 6 || this.value.length > 16){
+                mess.style.color = 'red'
+                mess.innerText = '输入的位数不对'
+            } else {
+                mess.style.color = ''
+                mess.innerText = '正确'
+            }
+        }
+    }
+    function styleNew(){
+        var lis = document.querySelector('.content').querySelectorAll('li')
+        for (var i = 0; i < lis.length; i++){
+            lis[i].onmouseover = function () {
+                this.style.backgroundColor = '#ccc'
+            }
+            lis[i].onmouseout = function () {
+                this.style = ''
+            }
+        }
+    }
+    var li = document.createElement('li')
+    var con = document.querySelector('.content ul')
+    con.insertBefore(li, con.children[3])
+</script>
 </body>
 <style>
     html,body{
         height:100%;
     }
-    .flex{
-        height:100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .bg-red{
+        background-color: red;
+    }
+    ul:after{
+        content:'.';
+        overflow: hidden;
+        clear:both;
+        display: block;
+        visibility: hidden;
+    }
+    .content ul li{
+        height:50px;
+        border-bottom:1px solid #999;
     }
 </style>
 </html>

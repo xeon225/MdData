@@ -4,11 +4,94 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>导航</title>
 </head>
+<style>
+    html,body,div,ul,li{
+        padding:0;
+        margin:0;
+        box-sizing: border-box;
+    }
+    ul,li{
+        list-style: none;
+    }
+    nav{
+
+    }
+    nav>ul>li{
+        float:left;
+        width: 20%;
+        font-size: 14px;
+        text-align: center;
+    }
+    nav>ul>li>a{
+        padding:20px;
+        display: block;
+    }
+    nav>ul>li>ul{
+        display: none;
+    }
+    .clearfix:after{
+        content:'.';
+        overflow: hidden;
+        visibility: hidden;
+        clear:both;
+        display: block;
+    }
+</style>
 <body>
+    <nav>
+        <ul class="clearfix">
+            <li>
+                <a>首页</a>
+            </li>
+            <li>
+                <a>关于</a>
+                <ul>
+                    <li>标题1</li>
+                    <li>标题2</li>
+                    <li>标题3</li>
+                    <li>标题4</li>
+                </ul>
+            </li>
+            <li>
+                <a>新闻</a>
+                <ul>
+                    <li>标题1</li>
+                    <li>标题2</li>
+                    <li>标题3</li>
+                    <li>标题4</li>
+                </ul>
+            </li>
+            <li>
+                <a>案例</a>
+                <ul>
+                    <li>标题1</li>
+                    <li>标题2</li>
+                    <li>标题3</li>
+                    <li>标题4</li>
+                </ul>
+            </li>
+            <li>
+                <a>联系</a>
+            </li>
+        </ul>
+    </nav>
     <script>
-        
+        var liP = document.querySelector('nav ul')
+        for(var i = 0; i < liP.children.length; i++){
+            liP.children[i].onmouseover = function() {
+                console.log(this.nodeType)
+                if(this.children[1]){
+                    this.children[1].style.display = 'block'
+                }
+            }
+            liP.children[i].onmouseout = function() {
+                if(this.children[1]){
+                    this.children[1].style.display = 'none'
+                }
+            }
+        }
     </script>
 </body>
 </html>

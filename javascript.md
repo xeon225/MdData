@@ -1,4 +1,5 @@
-## javascript
+# javascript
+## javascript 入门
 
 ##### javascript是什么
 javascript 客户端的编程语言
@@ -376,6 +377,10 @@ str = temp;						//赋值给我们声明的字符变量
 temp = null;					//销毁临时变量
 ````
 
+
+
+#### 字符串
+
 **字符串的不可变**
 指的是里面的值不可变，虽然看上去可以改变内容，但其实是地址变了，内存中断开辟了一个内容空间。
 
@@ -393,3 +398,240 @@ temp = null;					//销毁临时变量
 
 **charCodeAt(index)**
 返回相应索引号的字符ASCII值，目地：判断用户按下了那个键。
+
+**concat(str1,str2,str3...)**
+用于连接两个或多个字符串。相当于+
+
+**substr(start,length)**
+start开始位置，length取的个数。功能与splice()一样。
+
+**slice(start,end)**
+功能与数组slice一样
+
+**substring(start,end)**
+功能与slice一样，但是不接受负值
+
+**replace('被替换的字符', '替换为的字符')**
+它只会替换第一个字符
+
+**split('分隔符')**
+字符串转换为数组
+
+````
+var str1 = '1,2,3,4';
+var str2 = '1&2&3&4';
+str1.split(',')							//[1, 2, 3, 4]
+str2.split('&')							//[1, 2, 3, 4 ]
+````
+
+**toUpperCase()**
+转换大写
+
+**toLowerCase()**
+转换小写
+
+#### 简单数据类型 null
+
+null返回的是一个空的对象	object 
+
+> 如果有个变量我们以后打算存储为对象，暂时没想好放啥，这个时候就给null
+
+堆和栈
+1、简单数据类型存放在栈里面，里面直接开辟一个空间存放的是值
+2、复杂数据类型存放在堆里面，首先在栈里面存放的是地址，十六进制表示，然后这个地址指向堆里面的数据
+
+> Javascript中没有堆栈的概念，通过堆栈的方式，可以让更容易理解代码的一些执行方式。
+
+## JS Web Apis
+
+**API**
+是给程序员提供一种工具，以便能更轻松的实现想要完成的功能。
+
+**Web API**
+是浏览器的API，浏览器功能和页面元素的API。
+
+#### DOM
+
+文档对象模型（Document Object Model）
+
+文档：一个页面就是一个文档，DOM中使用document表示。
+元素：页面中的所有标签都是元素，DOM中使用element表示。
+节点：见面中的所有内容都是节点（标签，属性，广西，注释等），DOM中使用node表示。
+
+> DOM把以上内容都看做是对象
+
+##### 获取元素
+
+**getElementById()**根据ID获取
+
+````
+document.getElementById('id')
+````
+
+ **getElementsByTagName()**根据标签名获取
+````
+document.getElementsByTagName('div')				//父元素必须是单个元素
+````
+
+> 返回的是获取过来元素对象的集合，以伪数组的形式存储的。
+
+**getElementsByClassName()**根据类名获取
+
+````
+document.getElementsByClassName('class')
+````
+
+**querySelector()**返回指定选择器的第一个元素对象
+
+````
+document.querySelector()			//#id .class div 三种
+````
+
+**querySelectorAll()**返回指定选择器的所有元素对象集合
+
+````
+document.querySelectorAll()		//.class div 两种
+````
+
+**document.body**获取body元素
+
+````
+document.body
+````
+
+**document.documentElement**获取html元素
+
+````
+document.documentElement
+````
+
+##### 事件基础
+
+1、事件是有三部分组成，**事件源**、**事件类型**、**事件处理程序**。称为事件三要素。
+
+> 事件——简单理解：触发---响应机制
+
+（1）、事件源，事件被触发的对象，如：按钮。
+
+````
+var button = document.getElementById('btn')
+````
+
+（2）、事件类型，如何触发，什么事件，如：鼠标点击(onclick)还是鼠标经过，还是键盘按下。
+
+（3）、事件处理程序，通过一个函数赋值的方式完成。
+
+````
+btn.onclick = function(){
+	事件处理程序
+}
+````
+
+2、执行事件的步骤
+
+（1）获取事件源
+
+````
+var div = document.querySelector('div')
+````
+
+（2）注册事件（绑定事件）
+（2）添加事件处理程序（采取函数赋值形式）
+
+````
+div.onclick = function() {
+	事件处理程序
+	this							//this指向的是事件函数的调用者 div
+}
+````
+
+3、改变元素内容
+
+````
+element.innerText							//不识别html标签，非标准
+````
+
+从起始位置到终止位置的内容，但它去除html标签，同时空格和换行也会去掉
+
+````
+element.innerHTML							//识别html标签，w3c标准
+````
+
+起始位置到终止位置的全部内容，包括html标签，同时保留空格和换行
+
+4、修改元素属性
+
+src title href alt等属性
+
+5、修改表单属性
+
+Input.value	button.disabled	input.type	onfocus	onblur
+
+6、修改样式属性
+
+Element.style	Element.className
+
+7、排它思想
+
+先清除全部样式，再加自己样式
+
+onmouseover	onmouseout	Element.checked
+
+8、获取元素
+
+Element.属性			Eleement.getAttribute('属性')自定义属性
+
+9、设置元素属性值
+
+Element.setAttribute('属性',值)				//class 特殊，这里面写的就是class，不是classname
+
+10、删除属性
+
+Element.removeAttribute('属性')
+
+11、H5自定义属性
+
+H5规定自定义属性data-开头做为属性名并且赋值
+
+element.dataset
+dataset是一个集合里面存放了所有以data开头的自定义属性
+如果自定义属性里面有多个-链接的单词，我们获取的时候采取——驼峰命名法
+
+12、Node节点
+
+node.nodeType			//1是元素节点、3是文本节点
+
+Node.parentNode	父节点，就近唯一的元素。
+parentNode.childNodes	  所有的子节点，包含元素节点，文本节点。
+parentNode.children			所有的子元素节点。
+parentNode.firstChild			获取第一个子节点，包含元素和文本节点。
+parentNode.lastChild			获取最后一个子节点，包含元素和文本节点。
+parentNode.firstElementChild	获取第一个子元素节点。
+parentNode.lastElementChild	获取最后一个子元素节点。
+
+> parentNode.children[0]					firstChild
+>
+> parentNode.children[parentNode.children.length - 1]	lastChild
+
+node.nextSibling				//下一个兄弟节点，包含元素和文本节点。
+node.previousSibling		//上一个兄弟节点，包含元素和文本节点。
+node.nextElementSibling		//下一个兄弟元素节点。
+node.previousElementSibling		//上一个兄弟元素节点。
+
+````
+function getNextElementSibling(element){				//封装一个下一个兄弟元素节点函数
+	var el = element;
+	while (el = el.nextSibling) {
+		if (el.nodeType === 1)
+		return el;
+	}
+	return null;
+}
+````
+
+13、创建节点
+
+document.creatElement('元素')
+node.appendChild()			//后面追加元素。类似于数据的push
+将一个节点添加到指定父节点列表末尾，类似于css里面的after伪元素。
+Node.insertBefore('元素', '元素位置')			//前面添加元素。
