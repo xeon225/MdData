@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态生成表格</title>
+</head>
+<style>
+    html,body{
+        font-size: 14px;
+    }
+    table{
+        border-top:1px solid #ccc;
+        border-left:1px solid #ccc;
+        border-spacing: 0;
+    }
+    th{
+        background-color: #eee;
+    }
+    th,td{
+        padding:5px 10px;
+        border-right:1px solid #ccc;
+        border-bottom:1px solid #ccc;
+    }
+</style>
+<body>
+    <table>
+        <thead>
+            <th>姓名</th>
+            <th>科目</th>
+            <th>成绩</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+            <!-- <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr> -->
+        </tbody>
+    </table>
+    <script>
+        var datas = [{
+            name: '张三',
+            subject: 'js',
+            score: 100
+        },{
+            name: '李四',
+            subject: 'js',
+            score: 99
+        },{
+            name: '王五',
+            subject: 'js',
+            score: 77
+        },{
+            name: '赵六',
+            subject: 'js',
+            score: 88
+        }]
+        var tbody = document.querySelector('table tbody');
+        var tdLength = Object.getOwnPropertyNames(datas[0]).length + 1
+        
+        for (var i = 0; i < datas.length; i++){             //创建行
+            var tr = document.createElement('tr')
+            for(k in datas[i]){                             //创建列
+                var td = document.createElement('td')
+                td.innerHTML = datas[i][k]                  //对象数据放进td
+                tr.appendChild(td)
+            }
+            var del = document.createElement('td')          //创建删除按钮
+            del.innerHTML = '<a href="javascript:;">删除</a>'
+            del.onclick = function(){
+                this.parentNode.parentNode.removeChild(this.parentNode)
+            }
+            tr.appendChild(del)
+            tbody.appendChild(tr)
+        }
+        function Students(){
+
+        }
+    </script>
+</body>
+</html>

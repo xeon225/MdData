@@ -404,9 +404,20 @@
             }
         }
     }
-    var li = document.createElement('li')
-    var con = document.querySelector('.content ul')
-    con.insertBefore(li, con.children[3])
+    function elementEdit(){
+        var cont = document.querySelector('.content ul')
+        var li = cont.children[0].cloneNode(true);
+        cont.appendChild(li)
+        var button = document.querySelector('#from button')
+        button.onclick = function(){
+            if(cont.children.length !== 0){
+                cont.removeChild(cont.children[0])
+                cont.children.length === 0 && (button.disabled = true)
+                console.log(cont.children.length)
+            }
+        }
+    }
+    elementEdit()
 </script>
 </body>
 <style>

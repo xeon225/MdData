@@ -635,3 +635,25 @@ document.creatElement('元素')
 node.appendChild()			//后面追加元素。类似于数据的push
 将一个节点添加到指定父节点列表末尾，类似于css里面的after伪元素。
 Node.insertBefore('元素', '元素位置')			//前面添加元素。
+
+14、删除节点
+
+node.removeChild(child)		//删除父节点里的子节点
+
+15、复制节点
+
+node.cloneNode()	
+（1）括号参数为空或为false，是浅拷贝，只克隆复制节点本身，不克隆里面的子节点。
+（2）如果括号参数为true，是深度拷贝，会复制节点本身以及里面所有的子节点。
+
+16、对象属性个数
+
+````
+Object.getOwnPropertyNames(object).length		//方法1
+var i = 0									 //方法2
+for(k in object) {
+	i++
+}
+return i
+````
+
