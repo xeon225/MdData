@@ -664,3 +664,6 @@ return i
 （3）document.createElement()		//与innerHTML一样，多个元素效率稍低一点点，但是结构更清晰
 
 > 不同浏览器下，innerHTML比createElement高，数组的方式。
+
+#### DOM重点核心
+创建、增、删、改、查属性操作。
