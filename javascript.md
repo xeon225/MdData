@@ -800,3 +800,21 @@ if(e && e.stopPropagation){
 
 事件委托的原理
 **不是每个子节点单独设置事件监听器，而是事件监听器设置在其父节点上，然后利用冒泡原理影响设置每个子节点。**
+
+**￼￼常⽤的⿏标事件**
+1.禁⽌⿏标右键菜单
+contextmenu主要控制应该何时显示上下⽂菜单，主要⽤于程序员取消默认的上下⽂菜单
+
+
+````
+document.addEventListener(‘contextmenu’, function(e) {
+    e.preventDefault();
+})
+````
+
+
+
+.
+
+
+
