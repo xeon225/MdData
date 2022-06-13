@@ -383,7 +383,6 @@
         var input = document.querySelector('#from input')
         var mess = document.querySelector('#from span')
         input.onblur = function() {
-            console.log(this.value.length)
             if (this.value.length < 6 || this.value.length > 16){
                 mess.style.color = 'red'
                 mess.innerText = '输入的位数不对'
@@ -409,7 +408,8 @@
         var li = cont.children[0].cloneNode(true);
         cont.appendChild(li)
         var button = document.querySelector('#from button')
-        button.onclick = function(){
+        button.addEventListener('click', fn)
+        function fn(){
             if(cont.children.length !== 0){
                 cont.removeChild(cont.children[0])
                 cont.children.length === 0 && (button.disabled = true)

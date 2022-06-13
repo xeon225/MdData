@@ -30,8 +30,9 @@
             var put = document.getElementById('put')
             var del = document.getElementById('del')
             var messlist = document.querySelector('.messList ul')
+            put.addEventListener('click', pFn)
 
-            put.onclick = function(){
+            function pFn(){
                 if (mess.value === ''){
                     return alert('请输入内容')
                 } else {
@@ -47,6 +48,7 @@
                         messlist.removeChild(this.parentNode)
                     }
                 }
+                // put.removeEventListener('click', pFn)
             }
         }
         message()
