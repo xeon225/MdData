@@ -667,3 +667,83 @@ return i
 
 #### DOM重点核心
 创建、增、删、改、查属性操作。
+
+我们获取过来的DOM元素是一个对象（object），所以称为**文档对象模型**
+
+（1）创建
+document.write、innerHTML、createElement
+
+（2）增
+appendChild、insertBefore
+
+（3）删
+removeChild
+
+（4）改
+修改元素属性：src、href、title等
+修改普通元素内容：innerHTML、innerText
+修改表单元素：value、type、disabled等
+修改元素样式：style、className
+
+（5）查
+DOM提供的API方法：getElementById、getElementByTagName古老用法不太推荐
+H5提供的新方法：querySelector、querySelectorAll。提倡
+利用节点操作获取元素：父(parentNode)、子(children)、兄(previousElementSibing、nextElementSibing)提倡
+
+#### 事件操作
+
+给元素注册事件，采取**事件源**、**事件类型** = 事件处理程序
+
+| 鼠标事件    | 触发条件         |
+| ----------- | ---------------- |
+| onclick     | 鼠标点击左键触发 |
+| onmouseover | 鼠标经过触发     |
+| onmouseout  | 鼠标离开触发     |
+| oufocues    | 获取鼠标焦点触发 |
+| onblur      | 失去鼠标焦点触发 |
+| onmousemove | 鼠标移动触发     |
+| onmouseup   | 鼠标弹起触发     |
+| onmousedown | 鼠标按下触发     |
+
+ ### 事件高级
+
+#### 注册事件
+
+给元素添加事件、称为**注册事件**或者**绑定事件**
+注册事件有两方式：**传统方式**和**方法监听注册方式**
+
+传统注册事件方式，注册事件的**唯一性**
+同一个元素同一个事件只能设置一个处理函数，最后注册的处理函数将会覆盖前面注册的处理函数。
+
+方法监听注册方式（推荐）
+**addEventListener()**
+
+````
+eventTarget.addEventListener(type, listener[, useCapture])
+````
+
+eventTarget：目标对象
+type：事件类型字符串，比如click、mouseover，注意不要带on
+listener：事件处理函数，事件发生时，会调用该监听函数
+useCapture：可选参数，是一个布尔值。默认是false
+
+同一个元素，同一个事件可以添加多个侦听器（事件处理程序）
+
+#### 删除事件
+
+传统方式
+eventTarget.on事件 = null
+
+方法监听注册方式
+eventTarget.removeEventListener(type, listener[, useCapture])
+
+> 不能用匿名函数
+
+#### DOM事件流
+
+事件传播过程
+
+DOM事件流分为3个阶段
+1、捕获阶段
+2、当前目标阶段
+3、冒泡阶段
