@@ -71,8 +71,9 @@
             }
             var del = document.createElement('td')          //创建删除按钮
             del.innerHTML = '<a href="javascript:;">删除</a>'
-            del.onclick = function(){
-                this.parentNode.parentNode.removeChild(this.parentNode)
+            as = del.querySelector('a')
+            as.onclick = function(){
+                tbody.removeChild(this.parentNode.parentNode)          //删除行tr
             }
             tr.appendChild(del)
             tbody.appendChild(tr)

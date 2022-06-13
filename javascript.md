@@ -657,3 +657,13 @@ for(k in object) {
 return i
 ````
 
+17、三种创建元素区别
+
+（1）document.write()				//页面加载执行完，页面重绘
+（2）innerHTML						//元素标签里添加元素，拼接字符串的方式，采取数组形式的拼接性能会更快。
+（3）document.createElement()		//与innerHTML一样，多个元素效率稍低一点点，但是结构更清晰
+
+> 不同浏览器下，innerHTML比createElement高，数组的方式。
+
+#### DOM重点核心
+创建、增、删、改、查属性操作。
