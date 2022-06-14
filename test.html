@@ -417,8 +417,33 @@
             }
         }
     }
-    let fn = () => void elementEdit()           //箭头函数调用一个函数
-    fn()
+    let fn = () => void setInter()           //箭头函数调用一个函数
+    // fn() 
+    function mouseM(){
+        var img = document.getElementById('img')
+        img.style.position = 'fixed'
+        document.addEventListener('keyup', function(e){
+            console.log(e.keyCode)
+        })
+        document.addEventListener('keypress', function(e){
+            console.log(e.keyCode)
+        })
+    }
+    
+    function callback(){
+        console.log(n--)
+    }
+    function setTime(){
+        var time1 = setTimeout(callback, 2000)
+    }
+    function setInter(){
+        var n = 5
+        var time2 = setInterval(function(){
+            console.log(n--)
+            n < 0 && clearTimeout(time2)
+        }, 1000)
+    }
+    setInter()
 </script>
 </body>
 <style>

@@ -812,9 +812,93 @@ document.addEventListener(‘contextmenu’, function(e) {
 })
 ````
 
+**mousemove**鼠标移动事件
 
+> document.addEventListener('mousemove' , function(){})
 
-.
+**常用键盘事件**
+
+| 键盘事件   | 触发条件                                                     |
+| ---------- | ------------------------------------------------------------ |
+| onkeyup    | 某个键盘按键被松开时触发                                     |
+| onkeydown  | 某个键盘按键被按下时触发                                     |
+| onkeypress | 某个键盘按键被按下时触发，但是它不识别功能键比如ctrl，shift箭头等 |
+
+传统加on，addEventListener不需要加on
+
+事件执行顺序**keydown——keypress——keyup**
+
+ 键盘事件对象
+
+| 键盘事件对象属性 | 说明              |
+| ---------------- | ----------------- |
+| keyCode          | 返回该键的ASCII值 |
+
+### BOM
+
+浏览器对象模型
+
+**DOM的构成**
+BOM比DOM更大，它包含DOM。 
+
+window
+Document-location-navigation-screen-history
+
+window对象是浏览器的顶级对象，它具有双重角色。
+（1）它是JS访问浏览器窗口的一个接口
+（2）它是一个全局对象，定义在全局作用域中的变量，函数都会变成window对象的属性和方法
+
+> window下的一个特殊属性window.name
+
+**window对象**
+
+窗口加载事件
+
+````
+window.onload = function(){}
+或者
+window.addEventListener('load', function(){})
+````
+
+window.onload传统注册事件只能写一次，以最后window.onload为准
+addEventListener没有限制
+onload是等页面内容全部加载完，再去执行处理函数
+
+````
+document.addEventListener('DOMContentLoaded', function(){})
+````
+
+load等页面内容全部加载完毕，包含页面dom元素、图片、flash、css等。
+DOMContentLoaded是dom加载完毕，不包含图片flash css等就可以执行，加载速度比load更快一些
+
+窗口大小事件
+
+````
+window.addEventListener('resize', function(){})
+````
+
+#### 定时器
+
+**1、setTimeout()**
+
+`````
+setTimeout(function(){}, 2000)
+`````
+
+（1）这个window在调用的时候可以省略
+（2）这个延时时间单位是毫秒，但是可以省略，如果省略默认为0
+（3）这个调用函数可以直接写，还可以写函数名
+
+**回调函数callback**
+
+时间走完回头调用函数
+
+**清除定时器clearTimeout**
+clearTImeout(定时器名)
+
+**2、setInterval()**
+
+重复调用一个函数
 
 
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div {
+            margin: 200px;
+            min-width: 140px;
+        }
+        
+        span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <span class="hour">1</span>
+        <span class="minute">2</span>
+        <span class="second">3</span>
+    </div>
+    <script>
+        window.addEventListener('load', function(){
+            var hour = document.querySelector('.hour')
+            var minute = document.querySelector('.minute')
+            var second = document.querySelector('.second')
+            countT()
+            function countT(){
+                var newDate = +new Date()
+                var nowDate = +new Date('2022/6/14 17:39:05')
+                var countdown = (nowDate - newDate) / 1000
+                var h = parseInt(countdown / 60 / 60 % 24)
+                var m = parseInt(countdown / 60 % 60)
+                var s = parseInt(countdown % 60)
+                var hh = h < 10 ? '0' + h : h
+                var mm = m < 10 ? '0' + m : m
+                var ss = s < 10 ? '0' + s : s
+                hour.innerText = hh
+                minute.innerText = mm
+                second.innerText = ss
+                if (h === 0 && m === 0 && s === 0) {
+                    clearInterval(timer)
+                    console.log(countdown)
+                    return false
+                }
+            }
+            
+            var timer = setInterval(countT, 1000)
+        })
+    </script>
+</body>
+
+</html
