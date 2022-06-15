@@ -844,6 +844,15 @@ BOM比DOM更大，它包含DOM。
 window
 Document-location-navigation-screen-history
 
+```mermaid
+graph TD
+A[window] --> Document
+A --> location
+A --> navigation
+A --> screen
+A --> history
+```
+
 window对象是浏览器的顶级对象，它具有双重角色。
 （1）它是JS访问浏览器窗口的一个接口
 （2）它是一个全局对象，定义在全局作用域中的变量，函数都会变成window对象的属性和方法
@@ -906,7 +915,7 @@ clearTImeout(定时器名)
 window.clearInterval(定时器)
 ````
 
-#### this指向问题
+#### 3、this指向问题
 
 1、全局作用域或者普通函数中this指各全局对象window
 
@@ -915,3 +924,5 @@ window.clearInterval(定时器)
 2、方法调用中谁调用this指向谁
 
 3、构造函数中this指向构造函数的实例
+
+4、js
