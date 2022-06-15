@@ -900,5 +900,18 @@ clearTImeout(定时器名)
 
 重复调用一个函数
 
+清除定时器clearInterval()
 
+````
+window.clearInterval(定时器)
+````
 
+#### this指向问题
+
+1、全局作用域或者普通函数中this指各全局对象window
+
+> 定时器里面的this指向window
+
+2、方法调用中谁调用this指向谁
+
+3、构造函数中this指向构造函数的实例
