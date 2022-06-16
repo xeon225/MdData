@@ -443,7 +443,13 @@
             n < 0 && clearTimeout(time2)
         }, 1000)
     }
-    setInter()
+    function locat(){
+        var button = document.querySelector('#from button')
+        button.addEventListener('click', function(){
+            location.href = 'http://baidu.com'
+        })
+    }
+    locat()
 </script>
 </body>
 <style>

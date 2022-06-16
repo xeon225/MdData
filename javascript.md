@@ -841,9 +841,6 @@ document.addEventListener(‘contextmenu’, function(e) {
 **DOM的构成**
 BOM比DOM更大，它包含DOM。 
 
-window
-Document-location-navigation-screen-history
-
 ```mermaid
 graph TD
 A[window] --> Document
@@ -917,12 +914,102 @@ window.clearInterval(定时器)
 
 #### 3、this指向问题
 
-1、全局作用域或者普通函数中this指各全局对象window
+（1）全局作用域或者普通函数中this指各全局对象window
 
 > 定时器里面的this指向window
 
-2、方法调用中谁调用this指向谁
+（2）方法调用中谁调用this指向谁
 
-3、构造函数中this指向构造函数的实例
+（3）构造函数中this指向构造函数的实例
 
-4、js
+**4、js是单线程，同一个时间只能做一件事**
+
+**同步与异步**
+同步：前一个任务结束后再执行后一个任务，程序的执行顺序 与任务的排列顺序是一致的。
+异步：同时做多个任务。
+
+他们的本质区别：这条流水线上各个流程的执行顺序不同。
+
+**5、JS执行机制**
+
+同步任务
+同步任务都在主线程上执行，形成一个执行栈。
+异步任务
+JS的异步是通过回调函数实现的。
+一般而言，异步任务有以下三种类型：
+（1）、普通事件，如click、resize等
+（2）、资源加载，如load、error等
+（3）、定时器，包括setInterval、setTimeout等
+异步任务相关回调函数添加到任务队列中（任务队列也称为消息队列）
+
+> 1.先执行**执行栈中的同步任务。**
+> 2.异步任务（回调函数）放入任务队列中。
+> 3.一旦执行栈中的所有同步任务执行完毕，系统就会按次序读取**任务队列**中的异步任务，于是被读取的异步任务结束等待状态，进入执行栈，开始执行。
+
+由于主线程不断的重复获得任务、执行任务、再获取任务、再执行，所以这种机制被称为**事件循环（event loop）**
+
+**6、location对象**
+
+（1）url
+统一资源定位符（Uniform Resource Locator, URL）
+
+````
+protocol://host[:port]/path/[?query]#fragment
+http://www.baidu.com/index.html?name=andy&age=18#link
+````
+
+| 组成     | 说明                                                         |
+| -------- | ------------------------------------------------------------ |
+| protocol | 通信协议，常用的http，ftp、maito等                           |
+| host     | 主机（域名）www.baidu.com                                    |
+| port     | 端口号可选，省略时使用方案的默认端口如http的默认端口为80     |
+| path     | 路径由零或多个'/'符号隔开的字符串，一般用来表示主机上的一个目录或文件地址 |
+| query    | 参数，以键值对的形式通过&符号分隔开来                        |
+| fragment | 片段，#后面内容常见于链接锚点                                |
+
+location属性
+
+| location对象属性  | 返回值                            |
+| ----------------- | --------------------------------- |
+| location.href     | 获取或者设置整个URL               |
+| location.host     | 返回主机（域名）www.baidu.com     |
+| location.port     | 返回端口号，如果未写返回空字符串  |
+| location.pathname | 返回路径                          |
+| location.search   | 返回参数                          |
+| location.hash     | 返回片段，#后面内容常见于链接锚点 |
+
+**重点：href与search**
+
+location对象的方法
+
+| location对象方法   | 返回值                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| location.assign()  | 跟href一样，可以跳转页面（也称为重定向页面）                 |
+| location.replace() | 替换当前页面，因为不记录历史，所以不能后退页面               |
+| location.reload()  | 重新加载页面，相当于刷新按钮或者f5如果参数为true强制刷新ctrl+f5 |
+
+**7、navigator对象**
+
+包含有关浏览器的信息，它有很多属性，最常用的是userAgent
+userAgent该属性可以返回由客户机发送服务器的user-agent头部的值。
+
+**8、history对象**
+
+| history对象方法 | 作用                                     |
+| --------------- | ---------------------------------------- |
+| back()          | 后退功能                                 |
+| forward()       | 前进功能                                 |
+| go(参数)        | 前进后退功能，参数正数为前进，负数为后退 |
+
+**9、元素偏移量offset系列**
+
+offset与style区别
+
+| offset                               | style                               |
+| ------------------------------------ | ----------------------------------- |
+| 可以得到任意样式表中的样式值         | 只能得到行内样式表中的样式值        |
+| 获得的数值是没有单位的数值型         | width获得的是带有单位的字符串       |
+| offsetWidth包含padding+border+width  | width不包含padding+border           |
+| offsetWidth等是只读属性，不能赋值    | width是可读写属性，也可赋值         |
+| **要获取元素大小位置，offset更合适** | **要改变元素的值，需要用style改变** |
+

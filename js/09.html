@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .box{
+            width: 400px;
+            height: 400px;
+            background-color: aqua;
+            position: relative;
+        }
+        .fangda{
+            width: 200px;
+            height: 200px;
+            background-color: rgba(0,0,0,.3);
+            position: absolute;
+            /* display: none; */
+        }
+    </style>
+    <div id="title">
+        
+    </div>
+    <button>返回</button>
+    <div class="box">
+        <div class="fangda"></div>
+    </div>
+    <script>
+        var params = location.search.substr(1)
+        var div = document.querySelector('#title')
+        var button = document.querySelector('button')
+        //封装url传参转对象
+        function paramsObject(params){
+            var str = params
+            var arr = str.split('&')
+            var obj = {}
+            for (var i = 0; i < arr.length; i++){
+                var newArr = arr[i].split('=')
+                obj[newArr[0]] = newArr[1]
+            }
+            return obj
+        }
+        div.innerHTML = paramsObject(params).username
+
+        button.addEventListener('click', function(){
+            // history.forward()
+            // history.back()
+            history.go(-1)
+        })
+
+        var box = document.querySelector('.box')
+        var fangda = document.querySelector('.fangda')
+        var fangdaW = fangda.offsetWidth
+        var fangdaH = fangda.offsetHeight
+        var boxLeft = box.offsetLeft
+        var boxTop = box.offsetTop
+        var boxWidth = box.offsetWidth
+        var boxHeight = box.offsetHeight
+        var left = 0
+        var tops = 0
+        document.addEventListener('mousemove', function(e){
+            left = e.pageX - boxLeft
+            tops = e.pageY - boxTop
+            
+            if ((left >= 0 && left <= boxWidth) && (tops >=0 && tops <= boxHeight)){
+                div.innerHTML = '坐标：' + left + ' ' + tops
+                fangda.style.display = 'block'
+                if ((tops - fangdaH / 2) < 0){
+                    fangda.style.top = '0px'
+                } else {
+                    fangda.style.top = (tops - fangdaH / 2) + 'px'
+                }
+                if ((tops - fangdaH / 2) > boxHeight / 2){
+                    fangda.style.top = boxHeight / 2 + 'px'
+                }
+
+                if ((left - fangdaW / 2) < 0){
+                    fangda.style.left = '0px'
+                } else {
+                    fangda.style.left = (left - fangdaW / 2) + 'px'
+                }
+                if ((left - fangdaW / 2) > boxWidth / 2){
+                    fangda.style.left = boxWidth / 2 + 'px'
+                }
+            } else {
+                div.innerHTML = '鼠标不在盒子内'
+                fangda.style.display = 'none'
+            }
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="locat">
+        
+    </div>
+    <button>跳转</button>
+    <script>
+
+        var locat = document.querySelector('#locat')
+        var button = document.querySelector('button')
+        var timer = null
+        var num = 5
+        // timer = setInterval(function(){
+        //     locat.innerHTML = num + '秒自动跳转百度'
+        //     if (num === 0){
+        //         clearInterval(timer)
+        //         location.href = '09.html?username=xeon'
+        //     }
+        //     num--
+        // }, 1000)
+        button.addEventListener('click', function(){
+            location.href = '09.html?username=xeon&age=18'
+        })
+    </script>
+</body>
+</html>
