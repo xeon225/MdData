@@ -13,6 +13,9 @@
             padding: 0;
             margin: 0;
         }
+        em{
+            font-style: initial;
+        }
         .messBox{
             position: absolute;
             top: 50%;
@@ -37,6 +40,11 @@
             position: relative;
             border-right: 1px solid #ccc;
             float: left;
+        }
+        .messBox .tabNav ul li input{
+            width: 70%;
+            padding: 5px;
+            border: 1px solid #ddd
         }
         .messBox .tabNav ul li span{
             width: 10px;
@@ -84,9 +92,9 @@
     <div id="tab" class="messBox">
         <div class="tabNav">
             <ul class="clearFix">
-                <li class="current">测试1<span></span></li>
-                <li>测试2<span></span></li>
-                <li>测试3<span></span></li>
+                <li class="current"><em>测试1</em><span></span></li>
+                <li><em>测试2</em><span></span></li>
+                <li><em>测试3</em><span></span></li>
             </ul>
             <div class="addTab">添加</div>
         </div>
@@ -102,12 +110,11 @@
             constructor(id) {
                 that = this
                 this.main = document.querySelector(id)
-                this.lis = this.main.querySelectorAll('li')
-                this.sections = this.main.querySelectorAll('.tabCont div')
                 this.add = document.querySelector('.addTab')
-
                 this.ul = this.main.querySelector('ul')
                 this.fsection = this.main.querySelector('.tabCont')
+
+                //初始化操作
                 this.init()
             }
             //init 初始化操作让相关的元素绑定事件
@@ -117,12 +124,17 @@
                 for(var i = 0; i < this.lis.length; i++){
                     this.lis[i].index = i
                     this.lis[i].onclick = this.toggleTab
+                    this.remove[i].onclick = this.removeTab
+                    this.ems[i].ondblclick = this.editTab
+                    this.sections[i].ondblclick = this.editTab
                 }
             }
             //更新添加修改元素
             updateNode() {
                 this.lis = this.main.querySelectorAll('li')
                 this.sections = this.main.querySelectorAll('.tabCont div')
+                this.remove = this.main.querySelectorAll('.tabNav span')
+                this.ems = this.main.querySelectorAll('.tabNav em')
             }
             //1. 切换功能
             toggleTab() {
@@ -134,7 +146,7 @@
             addTab() {
                 that.clearClass()
                 //创建元素
-                var li = '<li class="current">tab<span></span></li>'
+                var li = '<li class="current"><em>tab</em><span></span></li>'
                 var section = '<div class="current">添加内容</div>'
                 //追加元素
                 that.ul.insertAdjacentHTML('beforeend', li)
@@ -142,12 +154,34 @@
                 that.init()
             }
             //3. 删除功能
-            delTab() {
-
+            removeTab(e) {
+                e.stopPropagation() //阻止冒泡
+                var index = this.parentNode.index
+                // this.parentNode.parentNode.removeChild(this.parentNode)     //删除tab按钮
+                // that.fsection.removeChild(that.fsection.children[index])
+                that.lis[index].remove()
+                that.sections[index].remove()
+                that.init()
+                if (document.querySelector('li.current')) return
+                index === 0 ? index : index--                               //删除第一个，index不变，第二个往后index--
+                that.lis[index] && that.lis[index].click()
             }
             //4. 修改功能
             editTab() {
-
+                var str = this.innerHTML
+                window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+                this.innerHTML = '<input type="text" />'
+                var input = this.children[0]
+                input.value = str
+                input.select()
+                input.onblur = function() {         //失去文本框焦点
+                    this.parentNode.innerHTML = this.value
+                }
+                input.onkeyup = function(e) {       //回车失去文本框焦点
+                    if(e.keyCode === 13){
+                        this.blur()
+                    }
+                }
             }
             clearClass() { //清除样式
                 for(var i = 0; i < this.lis.length; i++) {
