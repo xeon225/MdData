@@ -59,3 +59,32 @@ constructor()方法是类的构造函数（默认方法），**用于传递参�
 > 2、继承中，如果子类里面没有，就去查找父类有没有这个方法，如果有就执行父类的这个方法（就近原则）
 
 **注意：子类在构造函数中使用super，必须放在this前面（必须先调用父类的构造方法，再使用子类构造方法）**
+
+**使用类注意事项：**
+（1）在ES6中类没有变量提升，所以必须先定义类，才能通过类实例化对象
+（2）类里面的共有的属性和方法一定要加this使用
+（3）类里面的this指向问题
+（4）constructor里面的this指向的是创建的实体对象
+
+````
+var that
+var _that
+class Xeon {
+	constructor() { 
+		that = this			//constructor里面的this指向的是创建的实例对象
+		this.btn = document.querySelector('button')
+		this.btn.onclick = this.fn2
+	}
+	fn() {
+		_that = this		//这个方法fn里的this，指向的是实例对象wl,因为wl调用了这个函数
+	}
+	fn2() {
+		console.log(this)		//这个方法fn2里面的this指向的是btn这个按钮，因为这个按钮调用了这个函数
+		console.log(that)		//that里存储的是constructor里面的this
+	}
+}
+var wl = new Xeon()
+that === wl			//true
+_that === wl    //true
+````
+

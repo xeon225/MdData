@@ -7,28 +7,223 @@
     <title>Document</title>
 </head>
 <body>
+    <style>
+        ul,li {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .messBox{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -200px auto auto -400px;
+            width: 800px;
+            height: 400px;
+            border: 1px solid #ccc;
+        }
+        .messBox .tabNav{
+            position: relative;
+            z-index: 1;
+        }
+        .messBox .tabNav ul{
+            border-bottom:1px solid #ccc;
+        }
+        .messBox .tabNav ul li {
+            width: 10%;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            position: relative;
+            border-right: 1px solid #ccc;
+            float: left;
+        }
+        .messBox .tabNav ul li span{
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: black;
+        }
+        .messBox .tabNav ul li.current:after {
+            content:'';
+            position: absolute;
+            height: 0;
+            width: 100%;
+            border-bottom: 1px solid #fff;
+            bottom: -1px;
+            left: 0;
+        }
+        .messBox .tabCont {
+            padding: 20px;
+        }
+        .messBox .tabCont>div{
+            display: none;
+        }
+        .messBox .tabCont>div.current{
+            display: block;
+        }
+        .clearFix:after{
+            content: '';
+            clear: both;
+            overflow: hidden;
+            display: block;
+        }
+        .addTab{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+
+    <div id="tab" class="messBox">
+        <div class="tabNav">
+            <ul class="clearFix">
+                <li class="current">测试1<span></span></li>
+                <li>测试2<span></span></li>
+                <li>测试3<span></span></li>
+            </ul>
+            <div class="addTab">添加</div>
+        </div>
+        <div class="tabCont">
+            <div class="current">内容</div>
+            <div>内容1</div>
+            <div>内容2</div>
+        </div>
+    </div>
     <script>
-        class Father {
-            constructor(x, y) {
-                this.x = x
-                this.y = y
+        var that = null
+        class Tab {
+            constructor(id) {
+                that = this
+                this.main = document.querySelector(id)
+                this.lis = this.main.querySelectorAll('li')
+                this.sections = this.main.querySelectorAll('.tabCont div')
+                this.add = document.querySelector('.addTab')
+
+                this.ul = this.main.querySelector('ul')
+                this.fsection = this.main.querySelector('.tabCont')
+                this.init()
             }
-            sub() {
-                console.log(this.x - this.y)
+            //init 初始化操作让相关的元素绑定事件
+            init() {
+                this.updateNode()
+                this.add.onclick = this.addTab
+                for(var i = 0; i < this.lis.length; i++){
+                    this.lis[i].index = i
+                    this.lis[i].onclick = this.toggleTab
+                }
+            }
+            //更新添加修改元素
+            updateNode() {
+                this.lis = this.main.querySelectorAll('li')
+                this.sections = this.main.querySelectorAll('.tabCont div')
+            }
+            //1. 切换功能
+            toggleTab() {
+                that.clearClass()
+                this.className = 'current'
+                that.sections[this.index].className = 'current'
+            }
+            //2. 添加功能
+            addTab() {
+                that.clearClass()
+                //创建元素
+                var li = '<li class="current">tab<span></span></li>'
+                var section = '<div class="current">添加内容</div>'
+                //追加元素
+                that.ul.insertAdjacentHTML('beforeend', li)
+                that.fsection.insertAdjacentHTML('beforeend', section)
+                that.init()
+            }
+            //3. 删除功能
+            delTab() {
+
+            }
+            //4. 修改功能
+            editTab() {
+
+            }
+            clearClass() { //清除样式
+                for(var i = 0; i < this.lis.length; i++) {
+                    this.lis[i].className = ''
+                    this.sections[i].className = ''
+                }
             }
         }
-        class Son extends Father {
-            constructor(x, y){
-                super(x, y)
-                this.x = x
-                this.y = y
-            }
-            sum(){
-                console.log(this.x + this.y)
-            }
-        }
-        var son = new Son(10, 2)
-        son.sub()
+        var tab = new Tab('#tab');
+
+
+
+    //      window.onload = function() {
+    //         var tab = document.querySelector('.tabNav ul')
+    //         var tabCont = document.querySelector('.tabCont')
+    //         function currentData(){
+    //             for(var i = 0; i < tab.children.length; i++){
+    //                 var tabCurrent = tab.children[i]
+    //                 tabCurrent.setAttribute('data-index', i)
+                    
+    //             }
+    //             for(var i = 0; i < tabCont.children.length; i++){
+    //                 var tabContCurrent = tabCont.children[i]
+    //                 tabContCurrent.setAttribute('data-index', i)
+    //             }
+    //         }
+    //         currentData()
+    //         tab.addEventListener('click', function(e){
+    //             if (this !== e.target) {
+    //                 if (e.target.children.length === 0) {
+    //                     var index = e.target.parentNode.dataset.index
+    //                     this.removeChild(e.target.parentNode)
+    //                     tabCont.removeChild(tabCont.children[index])
+    //                     if (e.target.parentNode.getAttribute('class') == 'current' && this.children.length > 0){
+    //                         tab.children[0].setAttribute('class' ,'current')
+    //                         tabCont.children[0].setAttribute('class', 'current')
+    //                     }
+
+    //                 } else {
+    //                     for(var i = 0; i < this.children.length; i++){
+    //                         var index = e.target.dataset.index
+    //                         this.children[i].setAttribute('class', '')
+    //                         tabCont.children[i].setAttribute('class', '')
+    //                         e.target.setAttribute('class' ,'current')
+    //                         tabCont.children[index].setAttribute('class', 'current')
+    //                     }
+    //                 }
+                    
+    //             }
+    //         })
+    //         var that = this
+    //         class Addtab {
+    //             constructor(tab, cont) {
+    //                 that = this
+    //                 this.tab = tab
+    //                 this.cont = cont
+    //             }
+    //             add() {
+    //                 var li = document.createElement('li')
+    //                 var cont = document.createElement('div')
+    //                 tab.appendChild(li).innerHTML = that.tab + '<span></span>'
+    //                 tabCont.appendChild(cont).innerHTML = this.cont
+    //             }
+    //         }
+    //         var addtab = new Addtab('tab', '添加内容')
+    //         var addBtn = document.querySelector('.addTab')
+    //         addBtn.addEventListener('click', function(){
+    //             addtab.add()
+    //             currentData()
+    //             if (tab.children.length === 1) {
+    //                 tab.children[0].setAttribute('class' ,'current')
+    //                 tabCont.children[0].setAttribute('class', 'current')
+    //             }
+    //         })
+
+    //    }
     </script>
 </body>
 </html>
