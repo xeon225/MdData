@@ -443,13 +443,17 @@
             n < 0 && clearTimeout(time2)
         }, 1000)
     }
-    function locat(){
-        var button = document.querySelector('#from button')
-        button.addEventListener('click', function(){
-            location.href = 'http://baidu.com'
-        })
+    function locat(x, y){
+        // var button = document.querySelector('#from button')
+        // button.addEventListener('click', function(){
+        //     location.href = 'http://baidu.com'
+        // })
+        console.log(this, x, y)
     }
-    locat()
+    var a = {
+        name : '123213'
+    }
+    locat.call(a, 1, 2)
 </script>
 </body>
 <style>

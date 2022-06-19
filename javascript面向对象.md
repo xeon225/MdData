@@ -196,3 +196,66 @@ C{Object构造函数}
 8、扩展内置对象
 
 注意：数组和字符串内置对象不能给原型对象覆盖操作Array.prototype = {}，只能Array.prototype.xxx = function(){}的方式。
+
+#### 继承
+
+**call()**
+调用这个函数，并且修改函数运行时的this指向
+
+````
+fun.call(thisArg, arg1, arg2, ...)
+````
+
+thisArg：当前调用函数this的指向对象
+arg1，arg2：传递的其它参数
+
+1、call()可以调用函数
+2、call()可以改变这个函数的this指向
+
+````
+ Children.prototype = new Parent()					//原形对象继承，通过new实例
+ Children.prototype.constructor = Children	//constructor会被覆盖，重新指回
+````
+
+**类的本质**
+
+1、class本质还是function（函数）
+2、类的所有方法都定义在类的prototype属性上
+3、类创建的实例、里面也有`__proto__`原形指向类的prototype原型对象
+4、所有ES6的类它的绝大部分功能，ES5都可以做到，新的class写法只是让对象原型的写法更加清晰，更像面向对象编程的语法而已
+5、所以ES6的类其实就是语法糖
+6、语法糖：语法糖就是一种便捷写法，简单理解，有两种方法可以实现同样的功能，但是一种写法更加清晰、方便，那么这个方法就是语法糖
+
+ES5中的新增方法
+
+数组方法
+
+迭代（遍历）方法：forEach()、map()、filter()、some()、every()；
+
+````
+forEach()
+array.forEach(function(currentValue, index, arr))
+````
+
+currentValue：数组当前项的值
+index：数组当前项的索引
+arr：数组对象本身
+
+````
+filter()
+array.filter(function(currentValue, index, arr))
+````
+
+filter()方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素，主要用于筛选数组
+注意它直接返回一个新数组
+
+currentValue：数组当前项的值
+index：数组当前项的索引
+arr：数组对象本身
+
+````
+some()
+array.some(function(currentValue, index, arr))
+````
+
+some()也是查找满足条件的元素是否存在，返回的是一个布尔值，如果查找到第一个满足条件的元素就终止循环

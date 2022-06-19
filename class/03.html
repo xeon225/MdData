@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table{
+        border-top:1px solid #ccc;
+        border-left:1px solid #ccc;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+    th{
+        background-color: #eee;
+    }
+    th,td{
+        padding:5px 10px;
+        border-right:1px solid #ccc;
+        border-bottom:1px solid #ccc;
+    }
+</style>
+<body>
+    <div>
+        按照价格查询
+        <div><input id="min" type="text"> - <input id="max" type="text"> <button id="priceSearch">查询</button></div>
+    </div>
+    <div>按商品名称查询
+        <div><input id="productName" type="text"> <button id="proSearch">搜索</button></div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>产品名称</th>
+                <th>价格</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        var data = [
+            {
+                id: 1,
+                productName: '手机大全',
+                price: 4000
+            },
+            {
+                id: 2,
+                productName: '汽车飞机',
+                price: 9999
+            },
+            {
+                id: 3,
+                productName: '大减价',
+                price: 3000
+            },{
+                id: 4,
+                productName: '不过了白送',
+                price: 14000
+            }
+        ]
+        var that = null
+        class Product {
+            constructor () {
+                that = this
+                //表格与搜索框
+                this.main = document.querySelector('table tbody')
+                this.minPrice = document.querySelector('#min')
+                this.maxPrice = document.querySelector('#max')
+                this.productsearch = document.querySelector('#productName')
+                //搜索按钮
+                this.priceSearch = document.querySelector('#priceSearch')
+                this.proSearch = document.querySelector('#proSearch')
+
+                this.newArr = []
+                this.init()
+            }
+            init () {
+                //加载商品数据
+                this.addProduct()
+
+                proSearch.onclick = this.flagProduct
+            }
+            addProduct () {
+                that.main.innerHTML = ''
+                var newProduct = ''
+                var productData = that.newArr.length > 0 ? that.newArr : data
+                productData.forEach(function(arr){
+                    newProduct += '<tr><td>'+arr.id+'</td><td>'+arr.productName+'</td><td>'+arr.price+'</td></tr>'
+                })
+                that.main.innerHTML = newProduct
+            }
+            flagProduct () {
+                var pname = that.productsearch.value
+                that.newArr = data.filter(function(value){
+                    return value.productName === pname
+                })
+                if (that.newArr.length === 0){
+                    alert('无此商品')
+                } else {
+                    that.addProduct()
+                }
+            }
+        }
+
+        var product = new Product()
+        // var arr = [1,2,3,0]
+        // var sum = 0
+        // var flag = arr.map(function(value, index, array){
+        //     console.log(index)
+        //     return value*value
+        // })
+        // console.log(flag)
+        // function Father(uname, age){
+        //     this.uname = uname
+        //     this.age = age
+        //     this.fn = {
+        //         sum:function(){
+        //             console.log(1)
+        //         },
+        //         max:function(){
+        //             console.log(2)
+        //         }
+        //     }
+        // }
+        // Father.prototype.min = function(){
+        //     console.log(1)
+        // }
+        // function Son(uname, age){
+        //     Father.call(this, uname, age)
+        // }
+        
+        
+        // Son.prototype = new Father()
+        // Son.prototype.constructor = Son
+
+        // var son = new Son('sdf', 22)
+        // console.log(son)
+        // console.log(Son.prototype.constructor)
+    </script>
+</body>
+</html>
