@@ -278,3 +278,122 @@ Object.key(obj)
 
 效果类似for...in
 返回一个由属性名组成的数组
+
+**Object.defineProperty()定义新属性或修改原有的属性**
+
+````
+Object.defineProperty(obj, prop, descriptor)
+````
+
+Obj：必需。目标对象
+prop：必需。需定义或修改的属性的名字
+descriptor：必需。目标属性所拥有的特性
+
+descriptor：对象形式{}书写
+value：设置属性的值，默认为undefined
+writable：值是否可以重写，true|false	默认为false
+enumerable：目标属性是否可以被枚举。true|false	默认为false
+configurable：目标属性是否可以被删除或是否可以再次修改我。true|false	默认为false
+
+#### 函数进阶
+
+**1.1、函数的定义方式**
+
+（1）函数声明方式function关键字（命名函数）
+
+````
+function fn() {}
+````
+
+（2）匿名表达式（匿名函数）
+
+````
+var fn = function() {}
+````
+
+（3）利用new Function('参数1', '参数2', '函数体')
+
+````
+var f = new Function()
+````
+
+> 所有函数都是new Function()构造函数的实例
+> 函数也属于对象
+
+**1.2、函数的调用方式**
+
+（1）普通函数
+
+````
+function fn {
+	...
+}
+fn();     fn.call()
+````
+
+（2）对象的方法
+
+````
+var obj = {
+	fn : function() {
+		...
+	}
+}
+obj.fn()
+````
+
+（3）构造函数
+
+````
+function Fn() {
+	...
+}
+new Fn();
+````
+
+（4）绑定事件函数
+
+````
+btn.onclick = function() {}
+````
+
+（5）定时器函数
+
+````
+setInterval(function() {}, 1000)
+````
+
+（6）立即执行函数
+
+````
+(function(){})();			或者			(function(){}())
+````
+
+**2、函数内this的指向**
+
+这些this的指向，是当我们调用函数的时候确定的。调用方式的不同决定了this的指向不同一般指向我们的调用者。
+
+| 调用方式     | this指向                                   |
+| ------------ | ------------------------------------------ |
+| 普通函数调用 | window                                     |
+| 构造函数调用 | 实例对象，原型对象里面的方法也指向实例对象 |
+| 对象方法调用 | 该方法所属对象                             |
+| 事件绑定方法 | 绑定事件对象                               |
+| 定时器函数   | window                                     |
+| 立即执行函数 | window                                     |
+
+**2.1、call方法**
+
+（1）call()方法调用一个对象。简单理解为调用函数的方式，但是它可以改变函数的this指向。
+
+````
+fun.call(thisArg, arg1, arg2, ...)
+````
+
+（2）call()的主要作用可以实现继承
+
+**2.2、apply**
+
+（1）调用函数，也可以改变函数内部的this指向
+（2）但是他的参数必须是数组（伪数组）
+（3）apply的主要应用，比如可以利用apply借助于数学内置对象求最大值。

@@ -90,7 +90,7 @@
             addProduct () {
                 that.main.innerHTML = ''
                 var newProduct = ''
-                var productData = that.newArr.length > 0 ? that.newArr : data
+                var productData = this.length > 0 ? this : data
                 productData.forEach(function(arr){
                     newProduct += '<tr><td>'+arr.id+'</td><td>'+arr.productName+'</td><td>'+arr.price+'</td></tr>'
                 })
@@ -99,9 +99,9 @@
             //商品搜索
             flagProduct () {
                 var pname = that.productsearch.value.trim()
-                var arr = []
+                var newArr = []
                 if (pname == '') return alert('商品名不能为空')
-                that.newArr = data.filter(function(value){
+                newArr = data.filter(function(value){
                     return value.productName === pname
                 })
                 // data.some(function(value){
@@ -111,30 +111,49 @@
                 //         return true
                 //     }
                 // })
-                if (that.newArr.length === 0){
+                if (newArr.length === 0){
                     alert('无此商品')
                 } else {
-                    that.addProduct()
+                    that.addProduct.call(newArr)
                 }
             }
             //价格搜索
             priceProduct () {
+                var newArr= []
                 var min = that.minPrice.value.trim()
                 var max = that.maxPrice.value.trim()
                 if (min == '' && max == '') return alert('价格不能为空')
-                that.newArr = data.filter(function(value){
+                newArr = data.filter(function(value){
                     return value.price >= Number(min) && value.price <= Number(max)
                 })
-                if (that.newArr.length === 0){
+                if (newArr.length === 0){
                     alert('无此商品')
                 } else {
-                    that.addProduct()
+                    that.addProduct.call(newArr)
                 }
             }
         }
 
-        var product = new Product()
-        console.log(Object.keys(data[0]))
+        var product = new Product();
+        function Dl(uname, age, sex) {
+            this.uname = uname
+            this.age = age
+            this.sex = sex
+        }
+        var dl = new Dl()
+        function Father(uname, age, sex) {
+            this.uname = uname
+            this.age = age
+            this.sex = sex
+        }
+        function Son(uname, age, sex) {
+            Father.call(this, uname, age, sex)
+        }
+        var son = new Son('123123', 18, '22')
+        var arr = [1,2,3,4,5,6,7]
+        console.log(Math.max.apply(function(){
+            console.log(1)
+        }, arr))
         // var arr = [1,2,3,0]
         // var sum = 0
         // var flag = arr.map(function(value, index, array){
