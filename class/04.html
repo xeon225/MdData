@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .math {
+        }
+        .math div{
+            width: 40px;
+            height: 40px;
+            border-top: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            float: left;
+            text-align: center;
+        }
+        .math div:nth-of-type(10n + 1){
+            clear: both;
+            border-left: 1px solid #ccc;
+        }
+        .math div:nth-last-of-type(11) ~ div{
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+    <div class="math">
+
+    </div>
+    <button>bind</button>
+    <script>
+        var math = document.querySelector('.math')
+        var arr = new Array(100).toString().split(',').map(function(item, index){
+            return index + 1
+        })
+        var div = ''
+        // for(var i = 0; i < num; i++){
+        //     div += '<div>'+ (i + 1) +'</div>'
+        // }
+        // math.innerHTML = div
+        // var divs = document.querySelectorAll('div')
+        arr.forEach(function(item){
+            // div += '<div>'+ (i + 1) +'</div>'
+            if (item % 5 === 0 && item % 10 !== 0) {
+                div += '<div style="background-color: red">'+ item +'</div>'
+            } else if (Math.floor(item / 10) === 5) {
+                div += '<div style="background-color: blue">'+ item +'</div>'
+            } else if (item.toString().split('')[0] === item.toString().split('')[1] ) {
+                div += '<div style="background-color: green">'+ item +'</div>'
+            } else {
+                div += '<div>'+ item +'</div>'
+            }
+            math.innerHTML = div
+            // if (value.innerText % 5 === 0 && value.innerText % 10 !== 0) {
+            //     value.style.backgroundColor = 'red'
+            // }
+            // if (Math.floor(value.innerText / 10) === 5) {
+            //     value.style.backgroundColor = 'blue'
+            // }
+            // if (value.innerText.length === 2 ) {
+            //     var arr = value.innerText.split('')
+            //     if(arr[0] === arr[1]) {
+            //         value.style.backgroundColor = 'green'
+            //     }
+            // }
+        })
+        var button = document.querySelector('button')
+        button.onclick = function() {
+            this.disabled = true
+            setTimeout(function(){
+                this.disabled = false
+            }.bind(this), 2000)
+        }
+    </script>
+</body>
+</html>
