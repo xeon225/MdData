@@ -453,7 +453,14 @@
     var a = {
         name : '123213'
     }
-    locat.call(a, 1, 2)
+    // locat.call(a, 1, 2)
+    function fn2(a, b, callback) {
+        console.log(a + b)
+        callback && callback()
+    }
+    fn2(1, 2, function(){
+        console.log('aaa')
+    })
 </script>
 </body>
 <style>
