@@ -62,10 +62,8 @@
                 price: 14000
             }
         ]
-        var that = null
         class Product {
             constructor () {
-                that = this
                 //表格与搜索框
                 this.main = document.querySelector('table tbody')
                 this.minPrice = document.querySelector('#min')
@@ -80,15 +78,15 @@
             }
             init () {
                 //加载商品数据
-                this.addProduct()
+                console.log(data)
+                this.addProduct.call(data, this)
                 //商品搜索事件
-                proSearch.onclick = this.flagProduct
+                proSearch.onclick = this.flagProduct.bind(proSearch, this)
                 //价格搜索事件
-                priceSearch.onclick = this.priceProduct
+                priceSearch.onclick = this.priceProduct.bind(priceSearch, this)
             }
             //查询数据
-            addProduct () {
-                that.main.innerHTML = ''
+            addProduct (that) {
                 var newProduct = ''
                 var productData = this.length > 0 ? this : data
                 productData.forEach(function(arr){
@@ -97,7 +95,7 @@
                 that.main.innerHTML = newProduct
             }
             //商品搜索
-            flagProduct () {
+            flagProduct (that) {
                 var pname = that.productsearch.value.trim()
                 var newArr = []
                 if (pname == '') return alert('商品名不能为空')
@@ -114,11 +112,11 @@
                 if (newArr.length === 0){
                     alert('无此商品')
                 } else {
-                    that.addProduct.call(newArr)
+                    that.addProduct.call(newArr, that)
                 }
             }
             //价格搜索
-            priceProduct () {
+            priceProduct (that) {
                 var newArr= []
                 var min = that.minPrice.value.trim()
                 var max = that.maxPrice.value.trim()
@@ -129,7 +127,7 @@
                 if (newArr.length === 0){
                     alert('无此商品')
                 } else {
-                    that.addProduct.call(newArr)
+                    that.addProduct.call(newArr, that)
                 }
             }
         }

@@ -105,10 +105,10 @@
         </div>
     </div>
     <script>
-        var that = null
+        // var that = null
         class Tab {
             constructor(id) {
-                that = this
+                // that = this
                 this.main = document.querySelector(id)
                 this.add = document.querySelector('.addTab')
                 this.ul = this.main.querySelector('ul')
@@ -120,13 +120,13 @@
             //init 初始化操作让相关的元素绑定事件
             init() {
                 this.updateNode()
-                this.add.onclick = this.addTab
+                this.add.onclick = this.addTab.bind(this.add, this)
                 for(var i = 0; i < this.lis.length; i++){
                     this.lis[i].index = i
-                    this.lis[i].onclick = this.toggleTab
-                    this.remove[i].onclick = this.removeTab
-                    this.ems[i].ondblclick = this.editTab
-                    this.sections[i].ondblclick = this.editTab
+                    this.lis[i].onclick = this.toggleTab.bind(this.lis[i], this)
+                    this.remove[i].onclick = this.removeTab.bind(this.remove[i], this)
+                    this.ems[i].ondblclick = this.editTab.bind(this.ems[i], this)
+                    this.sections[i].ondblclick = this.editTab.bind(this.sections[i], this)
                 }
             }
             //更新添加修改元素
@@ -137,13 +137,13 @@
                 this.ems = this.main.querySelectorAll('.tabNav em')
             }
             //1. 切换功能
-            toggleTab() {
+            toggleTab(that) {
                 that.clearClass()
                 this.className = 'current'
                 that.sections[this.index].className = 'current'
             }
             //2. 添加功能
-            addTab() {
+            addTab(that) {
                 that.clearClass()
                 //创建元素
                 var li = '<li class="current"><em>tab</em><span></span></li>'
@@ -154,7 +154,7 @@
                 that.init()
             }
             //3. 删除功能
-            removeTab(e) {
+            removeTab(that, e) {
                 e.stopPropagation() //阻止冒泡
                 var index = this.parentNode.index
                 // this.parentNode.parentNode.removeChild(this.parentNode)     //删除tab按钮
@@ -167,7 +167,7 @@
                 that.lis[index] && that.lis[index].click()
             }
             //4. 修改功能
-            editTab() {
+            editTab(that) {
                 var str = this.innerHTML
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
                 this.innerHTML = '<input type="text" />'
