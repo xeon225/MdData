@@ -458,9 +458,17 @@
         console.log(a + b)
         callback && callback()
     }
-    fn2(1, 2, function(){
-        console.log('aaa')
-    })
+    // fn2(1, 2, function(){
+    //     console.log('aaa')
+    // })
+    function fn3() {
+        var num = 10
+        return function() {
+            console.log(num)
+        }
+    }
+    var f = fn3()
+    f()
 </script>
 </body>
 <style>
