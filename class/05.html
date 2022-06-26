@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <nav>
+        <ul>
+            <li>asd</li>
+            <li>sdf</li>
+            <li>sdfdf</li>
+            <li>sdfsdf</li>
+        </ul>
+    </nav>
+</body>
+<script>
+    // var name = "the window";
+    // var object = {
+    //     name: "my object",
+    //     getNameFunc: function() {
+    //         return function() {
+    //             return this.name;
+    //         };
+    //     }
+    // };
+    var name = "the window";
+    var object = {
+        name: "my object",
+        getNameFunc: function() {
+            var that = this
+            return function() {
+                return this.name;
+            };
+        }
+    };
+    console.log(object.getNameFunc()());
+    (function(){
+        var lis = document.querySelectorAll('nav ul li')
+        for(var i = 0; i < lis.length; i++){
+            // lis[i].index = i
+            // lis[i].onclick = function(){
+            //     console.log(this.index)
+            // }
+            (function(i){
+                lis[i].addEventListener('click', function(){
+                    console.log(i)
+                })
+                setTimeout(function(){
+                    console.log(lis[i].innerHTML)
+                }, 1000)
+            })(i);
+        }
+        var car = (function(){
+            var start = 13
+            var total = 0
+            return {
+                price: function(n) {
+                    if(n <= 3){
+                        total = start
+                    } else {
+                        total = start + (n - 3) * 5
+                    }
+                    return total
+                },
+                yd: function(flag) {
+                    return flag ? total + 10 : total
+                }
+            }
+        })();
+
+    })();
+</script>
+</html>
