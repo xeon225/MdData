@@ -31,7 +31,6 @@
     var object = {
         name: "my object",
         getNameFunc: function() {
-            var that = this
             return function() {
                 return this.name;
             };

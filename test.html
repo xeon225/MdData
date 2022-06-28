@@ -467,8 +467,19 @@
             console.log(num)
         }
     }
-    var f = fn3()
-    f()
+    // var f = fn3()
+    // f()
+    function fn4(n) {
+        // if (n === 1) {
+        //     return 1
+        // }
+        // return n * fn4(n - 1)
+        if (n === 1 || n === 2){
+            return 1
+        }
+        return fn4(n - 1) + fn4(n - 2)
+    }
+    console.log(fn4(5))
 </script>
 </body>
 <style>
