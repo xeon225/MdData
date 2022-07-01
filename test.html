@@ -479,7 +479,28 @@
         }
         return fn4(n - 1) + fn4(n - 2)
     }
-    console.log(fn4(5))
+    let aaaa = {name: '123123', age: 18, sex: '男'}
+    let {name, age, tel} = aaaa
+    console.log({name, age, tel})
+    const sum = num1 => num1
+    console.log(sum(1))
+    function fn5 () {
+        console.log(this)
+        return () => {
+            console.log(this)
+        }
+    }
+    const obj = {name: '123123'}
+    const resfn = fn5.call(obj)
+    resfn()
+    var obj5 = {
+        age: 20,
+        say: ()=> {
+            console.log(this)
+        }
+    }
+    console.log(obj5.age)
+    obj5.say()
 </script>
 </body>
 <style>
