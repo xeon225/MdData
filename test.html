@@ -479,28 +479,38 @@
         }
         return fn4(n - 1) + fn4(n - 2)
     }
-    let aaaa = {name: '123123', age: 18, sex: '男'}
-    let {name, age, tel} = aaaa
-    console.log({name, age, tel})
-    const sum = num1 => num1
-    console.log(sum(1))
-    function fn5 () {
-        console.log(this)
-        return () => {
-            console.log(this)
-        }
+    // let aaaa = {name: '123123', age: 18, sex: '男'}
+    // let {name, age, tel} = aaaa
+    // console.log({name, age, tel})
+    // const sum = num1 => num1
+    // console.log(sum(1))
+    // function fn5 () {
+    //     console.log(this)
+    //     return () => {
+    //         console.log(this)
+    //     }
+    // }
+    // const obj = {name: '123123'}
+    // const resfn = fn5.call(obj)
+    // resfn()
+    // var obj5 = {
+    //     age: 20,
+    //     say: ()=> {
+    //         console.log(this)
+    //     }
+    // }
+    // console.log(obj5.age)
+    // obj5.say()
+
+    const sum = (...args) => {
+        let total = 0
+        args.forEach(item => total += item)
+        return total
     }
-    const obj = {name: '123123'}
-    const resfn = fn5.call(obj)
-    resfn()
-    var obj5 = {
-        age: 20,
-        say: ()=> {
-            console.log(this)
-        }
-    }
-    console.log(obj5.age)
-    obj5.say()
+    console.log(sum(10, 20))
+    console.log(sum(10, 20, 30))
+    let arys = [1, 2, 3]
+    console.log(...arys)
 </script>
 </body>
 <style>
