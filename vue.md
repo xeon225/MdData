@@ -122,11 +122,51 @@ import './路径'
 
 2、基于回调函数按顺序读取文件的内容
 
-3、基于then-fs读取文件内容
+3.1、基于then-fs读取文件内容
 
 调用then-fs提供的readFile()方法，可以异步地读取文件的内容，它的返回值是Promise的实例对象。因些可以调用.then()方法为每个Promise异步操作指定成功和失败之后的回调函数
 
 ````
 import thenFs from 'then-fs'
+````
+
+**3.2、.then()方法的特性**
+
+如果上一个.then()方法中**返回了一个新的Promise实例对象**，则可以通过下一个.then()继续进行处理。通过.then()方法的**链式调用**，就解决了回调地狱的问题。
+
+3.3、基于Promise按顺序读取文件的内容
+
+**Promise支持链式调用**
+
+3.4、通过.catch捕获错误
+
+**3.5、Promise.all()方法**
+
+Promise.all()方法会发起并行的Promise异步操作，等所有的异步操作全部结束后才会执行下一步的.then操作（等待机制）。示例代码如下：
+
+````
+const promiseArr = [
+    thenFs.readFile('./files/01.txt', 'utf-8'),
+    thenFs.readFile('./files/02.txt', 'utf-8'),
+    thenFs.readFile('./files/03.txt', 'utf-8')
+]
+Promise.all(promiseArr).then(result => {
+    console.log(result);			//  [ '111', '222', '333' ]
+})
+````
+
+**3.6、Promise.race()方法**
+
+Promise.race()方法会发起并行的Promise异步操作，只要任何一个异步操作完成 ，就立即执行下一步的.then操作（赛跑机制）。示例代码如下：
+
+````
+const promiseArr = [
+    thenFs.readFile('./files/01.txt', 'utf-8'),
+    thenFs.readFile('./files/02.txt', 'utf-8'),
+    thenFs.readFile('./files/03.txt', 'utf-8')
+]
+Promise.race(promiseArr).then(result => {
+    console.log(result);			//  111或222或333
+})
 ````
 
