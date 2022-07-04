@@ -170,3 +170,99 @@ Promise.race(promiseArr).then(result => {
 })
 ````
 
+4、基于Promise封装读取文件的方法
+
+方法的封装要求：
+（1）方法的名称要定义为getFile
+（2）方法接收一个形参fpath，表示要读取的文件的路径
+（3）方法的返回值为Promise实例对象
+
+````
+function getFile(fpath) {
+	return new Promise()
+}
+````
+
+4.2、创建具体的异步操作
+
+````
+function getFile(fpath) {
+	return new Promise(function() {
+		fs.readFile(fpath, 'utf-8', (err, dataStr) => {})
+	})
+}
+````
+
+4.3、获取.then的两个实参
+
+通过.then()指定的成功和失败的回调函数，可以在function的形参中进行接收。
+
+````
+function getFile(fpath) {
+	return new Promise(function(resolve, reject) {
+		fs.readFile(fpath, 'utf-8', (err, dataStr) => {})
+	})
+}
+getFile('./路径').then(成功的回调函数，失败的回调函数)
+````
+
+4.4、调用resolve和reject回调函数
+
+Promise**异步操作的结果**，可以调用**resolve**或**reject**回调函数进行处理。
+
+````
+function getFile(fpath) {
+	return new Promise(function(resolve, reject) {
+		fs.readFile(fpath, 'utf-8', (err, dataStr) => {
+    	if (err) return reject(err)
+      resolve(dataStr)
+    })
+	})
+}
+getFile('./路径').then((r1) => {console.log(r1)}).catch(err => console.log(err.message))
+````
+
+### async/await
+
+1、什么是async/await
+**async/await**是**ES8**引入的新语法，用来简化Promise异步操作。在这之前，只能通过**链式.then()的方式**处理Promise异步操作。
+
+2、async/await的基本使用
+
+````
+import thenFs from 'then-fs'
+
+async function getAllFile() {
+    const r1 = await thenFs.readFile('./files/01.txt', 'utf-8')
+    console.log(r1)
+}
+getAllFile()		//不加async/await得到的是Promise的实例
+````
+
+3、async/await的**使用注意事项**
+
+（1）如果在function中使用了await，则function**必须**被async修饰
+（2）在async方法中，**第一个await之前的代码会同步执行**，await之后的代码会异步执行
+
+### EventLoop
+
+1、JavaScript是单线程的语言
+JavaScript是一门单线程执行的编程语言。也就是说，同一时间只能做一件事情。
+
+> 单线程执行任务队列的问题：
+> 如果**前一个任务非常耗时**，则后续的任务就不得不一直等待，从而导致**程序假死**的问题。
+
+2、同步任务和异步任务
+为了防止某个**耗时任务**导致程序假死的问题，JavaScript把待执行的任务分为了两类：
+（1）**同步任务**（synchronous）
+
+- 又叫做**非耗时任务**，指的是在主线程上排队执行的那些任务
+
+- 只有前一个任务执行完毕，才能执行后一个任务
+
+（2）异步任务（asynchronous）
+
+- 又叫做**耗时任务**，异步任务由JavaScript**委托给**宿主环境进行执行。
+- 当异步任务执行完成后，会**通知JavaScript主线程**执行异步任务的**回调函数**。
+
+3、同步任务和异步任务的执行过程
