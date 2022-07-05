@@ -266,3 +266,74 @@ JavaScript是一门单线程执行的编程语言。也就是说，同一时间�
 - 当异步任务执行完成后，会**通知JavaScript主线程**执行异步任务的**回调函数**。
 
 3、同步任务和异步任务的执行过程
+
+（1）同步任务由JavaScript主线程次序执行
+（2）异步任务**委托给**宿主环境执行
+（3）已完成的异步任务**对应的回调函数**，会被加入到任务队列中等待执行
+（4）JavaScript主线程的**执行栈**被清空后，会读取任务队列中的回调函数，次序执行
+（5）**JavaScript主线程不断重复上面的第4步**
+
+4、EventLoop的基本概念
+
+**JavaScript主线程从"任务队列"中读取异步任务的回调函数，放在执行栈中依次执行**。这个过程是循环不断的，所以整个的这种运行机制又称为**EventLoop**（事件循环）
+
+#### 宏任务和微任务
+
+1、什么是宏任务和微任务
+
+JavaScript把异步任务又做了进一步的划分，异步任务又分为两类，分别是：
+
+（1）宏任务（macrotask）
+
+- 异步Ajax请求
+
+- setTimeout、setInterval
+
+- 文件操作
+
+- 其它宏任务
+
+（2）微任务（microtask）
+
+- Promise.then、.catch和.finally
+
+- process.nextTick
+
+- 其它微任务
+
+```mermaid
+graph TD
+A(JS任务) --> B
+A -->C
+
+B(同步任务<br>非耗时任务)
+C(异步任务<br>耗时任务)
+C --> D
+C --> E
+
+D(宏任务<br>异步Ajax setTimeout setInterval 文件操作等)
+E(微任务<br>Promise.then Promise.catch Promise.finally等)
+```
+
+2、宏任务和微任务的执行顺序
+
+```mermaid
+graph LR;
+
+a-->b
+b-->c
+c-->d
+c--无-->e
+d-->e
+e-->a
+
+
+
+a(宏任务)
+b(执行结束)
+c{有微任务?}
+d(执行所有微任务)
+e(执行下一个<br>宏任务)
+```
+
+每一个宏任务执行完之后，都会检查是否存在待执行的微任务，如果有，则执行完所有微任务之后，再继续执行下一个宏任务。
