@@ -1,5 +1,7 @@
 # VUE
 
+## 学习目标
+
 ### ES6模块化
 
 1、node.js中如何实现模块化
@@ -277,7 +279,7 @@ JavaScript是一门单线程执行的编程语言。也就是说，同一时间�
 
 **JavaScript主线程从"任务队列"中读取异步任务的回调函数，放在执行栈中依次执行**。这个过程是循环不断的，所以整个的这种运行机制又称为**EventLoop**（事件循环）
 
-#### 宏任务和微任务
+### 宏任务和微任务
 
 1、什么是宏任务和微任务
 
@@ -337,3 +339,199 @@ e(执行下一个<br>宏任务)
 ```
 
 每一个宏任务执行完之后，都会检查是否存在待执行的微任务，如果有，则执行完所有微任务之后，再继续执行下一个宏任务。
+
+### 接口案例
+1、案例需求
+基于MySQL数据库 + Express 对外提供用户列表的API接口服务。用到的技术点如下：
+
+- 第三方包express和mysql2
+
+- ES6模块化
+
+- Promise
+
+- async/await
+
+2、主要的实现步骤
+（1）搭建项目的基本结构
+（2）创建基本的服务器
+（3）创建db数据库操作模块
+（4）创建user_ctrl业务模块
+（5）创建user_router路由模块
+
+3、搭建项目的基本结构
+
+（1）启用ES6模块化支持
+
+- package.json中声明"type": "module"
+
+（2）安装第三方依赖包
+- 运行npm install express@4.17.1 mysql2@2.2.5
+
+4、创建基本的服务器
+
+````
+import express from 'express'
+const app = express()
+app.listen(80, ()=> {
+    console.log('server running at http://127.0.0.1')
+})
+````
+
+5、创建db数据库操作模块
+
+````
+import mysql from 'mysql2'
+const pool = mysql.createPool({
+    host: '127.0.0.1',
+    port: 3306,
+    deatabase: 'my_db_01',	//请填写要操作的数据库的名称
+    user: 'root',
+    password: 'admin123'
+})
+export default pool.promise()
+````
+
+6、创建user_ctrl模块
+
+````
+import db from '../db/index.js'
+//使用ES6的按需导出语法，将getAllUser 方法导出去
+export async function getAllUser(req, res) {
+    const result = await db.query('select * from ev_users')
+    res.send({
+        status: 0,
+        message: '获取用户列表数据成功',
+        data: roms
+    })
+}
+````
+
+7、创建user_router模块
+
+````
+import express from "express";
+// 从 user_ctrl.js 模块中按需导入 getAllUser 函数
+import { getAllUser } from "../controller/user_ctrl.js";
+
+// 创建路由对象
+const router = new express.Router()
+// 挂载路由规则
+router.get('/user', getAllUser)
+
+// 使用 ES6 的默认导出语法，将路由对象共享出去
+export default router
+````
+
+8、导入并挂载路由模块
+
+````
+import express from 'express'
+// 1、使用默认导入语法，导入路由对象
+import userRouter from './router/user_router.js'
+const app = express()
+
+// 2、挂载用户路由模块
+app.use('/api', userRouter)
+
+app.listen(80, ()=> {
+    console.log('server running at http://127.0.0.1')
+})
+````
+
+9、使用try...catch捕获异常
+
+````
+export async function getAllUser(req, res) {
+	// 使用 try...catch 捕获 Promise 异步任务中产生的异常错误，并在 catch 块中进行处理
+	try {
+		// ev_users 表中没有 xxx 字段，所以此 SQL 语句会"执行异常"
+		const [rows] = await db.query('select * from ev_users')
+		res.send({ status: 0, message: '获取用户列表数据成功!', data: rows})
+	} catch (e) {
+		res.send({ status: 1, message: '获取用户列表数据失败!', data: e.message})
+	}
+}
+````
+
+### 总结
+
+（1）能够知道如何**使用ES6的模块化语法**
+- 默认导出与默认导入，按需导出与按需导入
+
+（2）能够知道如何**使用Promise解决回调地狱问题**
+
+- promise.**then**()、promise.**catch**()
+
+（3）能够使用**async/await**简化Promise的调用
+
+- 方法中用到了await，则方法需要被async修饰
+
+（4）能够说出什么是EventLoop
+
+- **EventLoop示意图**
+
+（5）能够说出宏任务和微任务的执行顺序
+
+- 在执行下一个宏任务之前，**先检查是否有待执行的微任务**
+
+## Vue 基础
+
+### 前端工程化
+
+1、 小白眼中的前端开发 vs 实现的前端开发
+
+小白眼中：网上搜代码下载自己用
+
+实现的前端开发
+
+- **模块化** (js 的模块化、css 的模块化、资源的模块化)
+- **组件化** (复用现有的 UI 结构、样式、行为)
+- **规范化** (目录结构的划分、编码规范化、接口规范化、文档规范化、 Git 分支管理) 
+- **自动化** (自动化构建、自动部署、自动化测试)
+
+2、什么是前端工程化
+
+前端工程化指的是：在**企业级的前端项目开发**中，把前端开发所需的工具、技术、流程、经验等进行规范化、 标准化。
+
+企业中的 Vue 项目和 React 项目，都是基于**工程化的方式**进行开发的。 
+
+好处:前端开发**自成体系**，有一套**标准的开发方案和流程**。
+
+3、前端工程化的解决方案
+
+早期的前端工程化解决方案:
+-  grunt( https://www.gruntjs.net/ )
+- gulp( https://www.gulpjs.com.cn/ )
+
+目前主流的前端工程化解决方案:
+- webpack( https://www.webpackjs.com/ ) 
+- parcel( https://zh.parceljs.org/ )
+
+### webpack 的基本使用
+
+1、什么是webpack
+
+概念:webpack 是**前端项目工程化的具体解决方案**。 
+
+主要功能:它提供了友好的**前端模块化开发**支持，以及**代码压缩混淆**、**处理浏览器端 JavaScript 的兼容性**、**性**
+**能优化**等强大的功能。
+
+好处:让程序员把**工作的重心**放到具体功能的实现上，提高了前端**开发效率**和项目的**可维护性**。 
+
+> 注意:目前 Vue，React 等前端项目，基本上都是基于 webpack 进行工程化开发的。
+
+2、创建列表隔行变色项目
+
+1 新建项目空白目录，并运行 npm init –y 命令，初始化包管理配置文件 package.json 
+2 新建 src 源代码目录
+3 新建 src -> index.html 首页和 src -> index.js 脚本文件
+4 初始化首页基本的结构
+5 运行 npm install jquery –S 命令，安装 jQuery
+6 通过 ES6 模块化的方式导入 jQuery，实现列表隔行变色效果
+
+3、在项目中安装 webpack
+
+在终端运行如下的命令，安装 webpack 相关的两个包：
+
+npm install webpack@5.42.1 webpack-cli@4.7.2 -D
