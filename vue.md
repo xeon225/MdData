@@ -501,7 +501,7 @@ export async function getAllUser(req, res) {
 3、前端工程化的解决方案
 
 早期的前端工程化解决方案:
--  grunt( https://www.gruntjs.net/ )
+- grunt( https://www.gruntjs.net/ )
 - gulp( https://www.gulpjs.com.cn/ )
 
 目前主流的前端工程化解决方案:
@@ -535,3 +535,140 @@ export async function getAllUser(req, res) {
 在终端运行如下的命令，安装 webpack 相关的两个包：
 
 npm install webpack@5.42.1 webpack-cli@4.7.2 -D
+
+````
+{
+  "dependencies": {   // 项目开发与上线都需要的插件
+  },
+  "devDependencies": {    // 只在项目开发阶段需要的插件
+  }
+}
+````
+
+````
+npm install --save-dev
+npm install --save
+npm install -D   //  --save-dev的缩写
+npm install -S	 //	 --save的缩写
+````
+
+4、在项目中配置 webpack
+
+（1）在项目根目录中，创建名为 webpack.config.js 的 webpack 配置文件，并初始化如下的基本配置:
+
+（2）在 package.json 的 scripts 节点下，新增 dev 脚本如下:
+
+（3）在终端中运行 npm run dev 命令，启动 webpack 进行项目的打包构建
+
+4.1、mode的可选值
+
+mode 节点的可选值有两个，分别是：
+
+（1）development
+
+- **开发环境**
+- **不会**对打包生成的文件进行**代码压缩**和**性能优化**
+- 打包**速度快**，适合在**开发阶段**使用
+
+（2）production
+
+- **生产环境**
+- **会**对打包生成的文件进行**代码压缩**和**性能优化**
+- 打包**速度很慢**，仅适合在项目**发布阶段**使用
+
+4.2、webpack.config.js文件的作用
+
+webpack.config.js 是 webpack 的配置文件。webpack 在真正开始打包构建之前，会先**读取这个配置文件**， 从而基于给定的配置，对项目进行打包。
+
+注意:由于 webpack 是**基于 node.js 开发出来的**打包工具，因此在它的配置文件中，支持使用 node.js 相关 的语法和模块进行 webpack 的个性化配置。
+
+4.3、webpack 中的默认约定
+在 webpack 4.x 和 5.x 的版本中，有如下的默认约定：
+（1）默认的打包入口文件为 **src** -> **index.js**
+（2）默认的输出文件路径为 dist -> **main.js**
+注意:可以在 **webpack.config.js** 中修改打包的默认约定
+
+4.4、自定义打包的入口与出口
+
+在 webpack.config.js 配置文件中，通过 entry 节点指定打包的入口。通过 output 节点指定打包的出口。 示例代码如下：
+
+````
+const path = require('path')    // 导入 node.js 中专门操作路径的模块
+
+module.exports = {
+    entry: path.join(__dirname, './src/index.js'),      // 打包入口文件的路径
+    output: {
+        path: path.join(__dirname, './dist'),       // 输出文件的存放路径
+        filename: 'main.js'       // 输出文件的名称
+    }
+}
+````
+
+### webpack 中的插件
+
+1、webpack 插件的作用
+通过安装和配置第三方的插件，可以**拓展 webpack 的能力**，从而让 webpack **用起来更方便**。最常用的 webpack 插件有如下两个：
+（1）**webpack-dev-server**
+
+- 类似于 node.js 阶段用到的 nodemon 工具
+- 每当修改了源代码，webpack 会自动进行项目的打包和构建
+
+（2） **html-webpack-plugin**
+
+- webpack 中的 HTML 插件(类似于一个模板引擎插件) 
+- 可以通过此插件自定制 index.html 页面的内容
+
+2、webpack-dev-server
+
+**webpack-dev-server** 可以让 webpack **监听项目源代码的变化**，从而进行**自动打包构建。**
+
+2.1、安装 webpack-dev-server
+
+运行如下的命令，即可在项目中安装此插件：
+npm install **webpack-dev-server**@3.11.2 -D
+
+2.2、配置 webpack-dev-server
+
+（1）修改 package.json -> scripts 中的 dev 命令如下:
+
+````
+  "scripts": {
+    "dev": "webpack serve"		//script 节点下的脚本，可以通过 npm run 执行
+  }
+````
+
+（2）再次运行 **npm run dev** 命令，重新进行项目的打包
+（3）在浏览器中访问 http://localhost:8080 地址，查看自动打包效果
+
+> 注意：webpack-dev-server 会启动一个**实时打包的 http 服务器**
+
+2.3、打包生成的文件哪儿去了?
+（1）不配置 webpack-dev-server 的情况下，webpack 打包生成的文件，会存放到**实际的物理磁盘**上 
+
+- 严格遵守开发者在 webpack.config.js 中指定配置
+
+- 根据 **output 节点**指定路径进行存放
+
+（2）配置了 webpack-dev-server 之后，打包生成的文件**存放到了内存中** 
+
+- 不再根据 output 节点指定的路径，存放到实际的物理磁盘上
+
+- **提高了**实时打包输出的**性能**，因为内存比物理磁盘速度快很多
+
+2.4、生成到内存中的文件该如何访问?
+
+webpack-dev-server 生成到内存中的文件，默认**放到了项目的根目录中**，而且是**虚拟的**、**不可见的**。 
+
+- 可以直接用 **/** 表示**项目根目录**，**后面跟上要访问的文件名称**，即可访问内存中的文件
+- 例如 **/bundle.js** 就表示要访问 webpack-dev-server 生成到内存中的 bundle.js 文件
+
+3、html-webpack-plugin
+
+html-webpack-plugin 是 **webpack 中的 HTML 插件**，可以通过此插件**自定制** index.html **页面的内容**。
+**需求**：通过 html-webpack-plugin 插件，将 src 目录下的 index.html 首页，**复制到项目根目录中一份!**
+
+3.1、安装 html-webpack-plugin
+
+运行如下的命令，即可在项目中安装此插件：
+
+npm install **html-webpack-plugin**@5.3.2 -D
