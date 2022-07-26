@@ -672,3 +672,300 @@ html-webpack-plugin 是 **webpack 中的 HTML 插件**，可以通过此插件**
 运行如下的命令，即可在项目中安装此插件：
 
 npm install **html-webpack-plugin**@5.3.2 -D
+
+3.2、配置 html-webpack-plugin
+
+````
+// 1. 导入 html-webpack-plugin 插件，得到一个构造函数
+const HtmlPlugin = require('html-webpack-plugin')
+
+// 2. 创建 HTML 插件的实例对象
+const htmlPlugin = new HtmlPlugin({
+    template: './src/index.html',   // 指定原文件的存放路径
+    filename: './index.html',   // 指定生成的文件的存放路径
+})
+
+module.exports = {
+		mode: 'development',
+    plugins: [htmlPlugin],  // 3. 通过 plugins 节点，使 htmlPlugin 插件生效
+}
+````
+3.3、解惑 html-webpack-plugin
+
+（1）通过 HTML 插件复制到项目根目录中的 index.html 页面，**也被放到了内存中**
+（2）HTML 插件在生成的 index.html **页面**，**自动注入**了打包的 main.js 文件
+
+4、devServer 节点
+在 webpack.config.js 配置文件中，可以通过 **devServer** 节点对 webpack-dev-server 插件进行更多的配置， 示例代码如下：
+
+````
+devServer: {
+	open: true, // 初次打包完成后，自动打开浏览器
+	host: '127.0.0.1',  // 实时打包所使用的主机地址
+	port: 8080,   // 实时打包所使用的端口号
+}
+````
+
+> 注意:凡是修改了 webpack.config.js 配置文件，或修改了 package.json 配置文件，**必须重启实时打包的服务器**，否则最新的配置文件无法生效!
+
+### webpack 中的loader
+1、loade 概述
+
+在实际开发过程中，webpack 默认只能打包处理以 .js 后缀名结尾的模块。其他**非 .js 后缀名结尾的模块**， webpack 默认处理不了，**需要调用 loader 加载器才可以正常打包**，否则会报错!
+
+loader 加载器的作用：**协助 webpack 打包处理特定的文件模块**。比如: 
+- css-loader 可以打包处理 .css 相关的文件
+- less-loader 可以打包处理 .less 相关的文件
+- babel-loader 可以打包处理 webpack 无法处理的高级 JS 语法
+
+2、loader 的调用过程
+
+```mermaid
+graph LR
+A --> B
+B --> C
+B --> D
+C --> E
+C --> F
+D --> G
+D --> H
+E --> I
+E --> J
+
+A(将要被webpack打包<br>处理的文件模块)
+B{是否为 js 模块}
+C{是否配置了对应 loader}
+D{是否包含高级 js 语法}
+E{是否<br>配置了 babel}
+F(webpack 进行处理)
+G(调用 loader 处理)
+H(报错)
+I(调用 loader 处理)
+J(报错)
+```
+
+3、打包处理 css 文件
+
+（1）运行 npm i **style-loader@3.0.0 css-loader@5.2.6 -D** 命令，安装处理 css 文件的 loader
+（2）在 webpack.config.js 的 **module** -> **rules** 数组中，添加 loader 规则如下：
+
+````
+module: {   // 所有第三方文件模块的匹配规则
+    rules: [    // 文件后缀名的匹配规则
+        { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+    ]
+}
+````
+
+其中，**test** 表示匹配的**文件类型**， **use** 表示对应**要调用的 loader** 注意：
+
+- use 数组中指定的 loader **顺序是固定的**
+- 多个 loader 的调用顺序是：**从后往前调用**
+
+> 1. webpack 默认只能打包处理 .js 结尾的文件，处理不了其它后缀的文件
+> 2. 由于代码中包含了 **index.css** 这个文件，因此 webpack 默认处理不了
+> 3. 当 webpack 发现某个处理不了的时候，会查找 **webpack.config.js** 这个配置文件，看 module.**rules** 数组中，是否配置了对应的 loader 加载器
+> 4. webpack 是 index.css 这个文件，**先**转交给最后一个 loader 进行处理（先转交给 css-loader）
+> 5. 当 css-loader 处理完毕之后，会把处理的结果，转交给下一个 loader（转交给 style-loader）
+> 6. 当 style-loader 处理完毕之后，发现没有下一个 loader 了，于是就把处理的结果，转交给了 webpack
+> 7. Webpack 把 style-loader 处理的结果，合并到 **/dist/main.js** 中，最终生成打包好的文件
+
+4、打包处理 less 文件
+
+（1）运行 npm i **less-loader@10.0.1 less@4.1.1** -D 命令
+（2）在 webpack.config.js 的 **module** -> **rules** 数组中，添加 loader 规则如下：
+
+````
+module: {   // 所有第三方文件模块的匹配规则
+		rules: [    // 文件后缀名的匹配规则
+				{ test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] }
+		]
+}
+````
+
+5、打包处理样式表中与 url 路径相关的文件
+
+（1）运行 npm i **url-loader@4.1.1 file-loader@6.2.0** -D 命令
+（2）在 webpack.config.js 的 **module** -> **rules** 数组中，添加 loader 规则如下：
+
+````
+module: {   // 所有第三方文件模块的匹配规则
+    rules: [    // 文件后缀名的匹配规则
+        { test: /\.jpg|png|gif$/, use: 'url-loader?limit=22229' }
+    ]
+}
+````
+
+其中 **?** 之后的是 **loader 的参数项**：
+- limit 用来指定**图片的大小**，单位是字节（byte）
+- 只有 **≤** limit 大小的图片，才会被转为 base64 格式的图片
+
+6、打包处理 js 文件中的高级语法
+
+webpack 只能打包处理**一部分**高级的 JavaScript 语法。对于那些 webpack 无法处理的高级 js 语法，需要借 助于 **babel-loader** 进行打包处理。例如 webpack 无法处理下面的 JavaScript 代码：
+
+````
+// 1、定义了名为 info 的装饰器
+function info(target){
+	// 2、为目标添加静态属性 info
+	target.info = 'Person info'
+}
+
+// 3、为Person 类应用 info 装饰器
+@info
+class Person {}
+
+// 4、打印 Person 的静态属性 info
+console.log(Person.info)
+````
+
+6.1、安装 babel-loader 相关的包
+
+运行如下的命令安装对应的依赖包:
+npm i **babel-loader@8.2.2 @babel/core@7.14.6 @babel/plugin-proposal-decorators@7.14.5** -D
+
+在 webpack.config.js 的 **module** -> **rules** 数组中，添加 loader 规则如下：
+
+````
+//  注意：必须使用 exclude 指定排除项：因为 node_modules 目录下的第三方包不需要被打包
+{ test: /\.js$/, use: 'babel-loader', exclude: /node_modules/ }
+````
+
+6.2、配置 babel-loader
+
+在项目根目录下，创建名为 **babel.config.js** 的配置文件，定义 **Babel 的配置项**如下:
+
+### 打包发布
+
+1、为什么要打包发布
+
+**项目开发完成之后**，需要使用 webpack **对项目进行打包发布**，主要原因有以下两点：
+（1）开发环境下，打包生成的文件**存放于内存中**，无法获取到最终打包生成的文件
+（2）开发环境下，打包生成的文件**不会进行代码压缩和性能优化**
+
+**为了让项目能够在生产环境中高性能的运行**，因此需要对项目进行打包发布。
+
+2、配置 webpack 的打包发布
+
+在 **package.json** 文件的 **scripts** 节点下，新增 build 命令如下：
+
+````
+"scripts": {
+  "dev": "webpack serve",		// 开发环境中，运行 dev 命令
+  "build": "webpack --mode production"	// 项目发布时，运行 build 命令
+}
+````
+
+**--model** 是一个参数项，用来指定 webpack 的**运行模式**。production 代表生产环境，会对打包生成的文件进行**代码压缩**和**性能优化**。
+
+>通过 --model 指定的参数项，会**覆盖** webpack.config.js 中的 model 选项。
+
+3、把 JavaScript 文件统一生成到 js 目录中
+在 **webpack.config.js** 配置文件的 **output** 节点中，进行如下的配置:
+
+````
+output: {
+	path: path.join(__dirname, './dist'),
+	// 明确告诉 webpack 把生成的 main.js 文件存放到 dist 目录下的 js 子目录中
+	filename: 'js/main.js'
+},
+````
+
+4、把图片文件统一生成到 image 目录中
+修改 webpack.config.js 中的 **url-loader** 配置项，新增 **outputPath** 选项即可指定图片文件的输出路径：
+
+````
+//  在配置 url-loader 的时候，多个参数之间，使用 & 符号进行分隔
+//	明确指定把打包生成的图片文件，存储在 dist 目录下的 images 文件夹中
+{ test: /\.jpg|png|gif$/, use: 'url-loader?limit=1000&outputPath=images' }
+````
+
+5、自动清理 dist 目录下的旧文件
+为了在每次打包发布时**自动清理掉 dist 目录中的旧文件**，可以安装并配置 **clean-webpack-plugin** 插件：
+
+````
+// 1、安装清理 dist 目录的 webpack 插件
+npm install clean-webpack-plugin@3.0.0 -D
+
+// 2、按需导入插件，得到插件的构造函数之后，创建插件的实例对象
+const { CleanWebpackPlugin } = require('cleanwebpackplugin')
+const cleanPlugin = new CleanWebpackPlugin()
+
+// 3、把创建的 cleanPlugin 插件实例对象，挂载到 plugins 节点中
+plugins: [htmlPlugin, cleanPlugin],	//	挂载插件
+````
+
+### Source Map
+
+1、生产环境遇到的问题
+
+前端项目在投入生产环境之前，都需要对 JavaScript 源代码进行**压缩混淆**，从而减小文件的体积，提高文件的 加载效率。此时就不可避免的产生了另一个问题：
+
+**对压缩混淆之后的代码除错（debug）**是一件极其困难的事情
+
+- 变量被替换成**没有任何语义**的名称
+- 空行和注释被剔除
+
+2、什么是 Source Map
+
+**Source Map 就是一个信息文件，里面储存着位置信息**。也就是说，Source Map 文件中存储着压缩混淆后的 代码，所对应的**转换前的位置**。
+有了它，出错的时候，除错工具将**直接显示原始代码，而不是转换后的代码**，能够极大的方便后期的调试。
+
+3、webpack **开发环境下的** Source Map
+
+在**开发环境下**，webpack **默认启用了** Source Map 功能。当程序运行出错时，可以直接在控制台提示**错误行的位置**，并**定位到具体的源代码**
+
+3.1、默认 Source Map 的问题
+
+开发环境下默认生成的 Source Map，记录的是**生成后的代码的位置**。会导致**运行时报错的行数**与**源代码的行数**不一致的问题。
+
+3.2、解决默认 Source Map 的问题
+
+开发环境下，推荐在 **webpack.config.js** 中添加如下的配置，即可保证**运行时报错的行数**与**源代码的行数**保持一致：
+
+````
+module.exports = {
+    mode: 'development',
+    // eval-source-map 仅限在"开始模式"下使用，不建议在"生产模式"下使用
+    // 此选项生成的 Source Map 能够保证"运行时报错的行数"与"源代码的行数"保持一致
+    devtool: 'eval-source-map'
+}
+````
+
+4、webpack **生产环境下的** Source Map
+
+在**生产环境下**，如果**省略了 devtool 选项**，则最终生成的文件中**不包含 Source Map**。这能够**防止原始代码**通过 Source Map 的形式**暴露**给别有所图之人。
+
+4.1、只定位行数不暴露源码
+
+在生产环境下，如果**只想定位报错的具体行数**，且**不想暴露源码**。此时可以将 **devtool** 的值设置为 **nosources-source-map**。
+
+4.2、定位行数且暴露源码
+
+在生产环境下，如果**想在定位报错行数的同时，展示具体报错的源码**。此时可以将 **devtool** 的值设置为 **source-map**。
+>采用此选项后:你应该将你的服务器配置为，**不允许普通用户访问 source map 文件**!
+
+5、Source Map 的最佳实践
+
+（1）开发环境下:
+- 建议把 devtool 的值设置为 **eval-source-map**
+- 好处:可以精准定位到具体的错误行
+
+（2）生产环境下:
+- 建议**关闭 Source Map** 或将 devtool 的值设置为 **nosources-source-map**
+- 好处:防止源码泄露，提高网站的安全性
+
+### 总结
+
+（1）能够掌握 webpack 的基本使用
+- 安装、**webpack.config.js**、修改打包入口
+
+（2）了解常用的 plugin 的基本使用
+- **webpack-dev-server**、html-webpack-plugin 
+
+（3）了解常用的 loader 的基本使用
+- loader 的作用、**loader 的调用过程**
+
+（4）能够说出 Source Map 的作用
+- 精准定位到**错误行**并**显示对应的源码**
+- 方便开发者调试源码中的错误
