@@ -1570,3 +1570,404 @@ Vue.filter('filterA', (msg, arg1, arg2) => {
 })
 ````
 
+### 侦听器
+
+1、什么是 watch 侦听器
+
+**watch 侦听器**允许开发者监视数据的变化，从而**针对数据的变化做特定的操作**。
+语法格式如下：
+
+````
+const vm = new Vue({
+  el: '#app',
+  data: {
+    username: ''
+  },
+  // 所有的侦听器，都应该被定义到 watch 节点下
+  watch: {
+    // 侦听器本质上是一个函数，要监听哪个数据的变化，就把数据名作为方法名即可
+    // 新值在前，旧值在后
+		username(newVal, oldVal) {
+			console.log(newVal, oldVal)
+		}
+	}
+})
+````
+
+2、使用 watch 检测用户名是否可用
+
+监听 username 值的变化，并使用 axios 发起 Ajax 请求，**检测当前输入的用户名是否可用**：
+
+````
+watch: {
+	async username(newVal, oldVal) {
+		if (newVal === '') return
+    // 使用 axios 发起请求，判断用户名是否可用
+    const { data: res } = await axios.get('https://www.escook.cn/api/finduser/' + newVal)
+    console.log(res)
+	}
+}
+````
+
+3、immediate 选项
+
+默认情况下，组件在初次加载完毕后不会调用 watch 侦听器。如果想让 watch 侦听器**立即被调用**，则需要使 用 **immediate** 选项。示例代码如下：
+
+````
+watch: {
+	username() {
+	  // handler 是固定写法，表示当 username 的值变化时，自动调用 handler 处理函数
+		handler(newVal, oldVal) {
+			console.log(newVal, oldVal)
+		}
+	},
+	// 表示页面初次渲染好之后，就立即触发当前的 watch 侦听器
+	immediate: true
+}
+````
+
+4、deep 选项
+
+如果 **watch 侦听的是一个对象**，如果**对象中的属性值发生了变化**，则**无法被监听到**。此时需要使用 **deep 选项**，代码示例如下：
+
+````
+data: {
+  // 用户的信息对象
+	info: {
+		username: 'admin'
+	}
+},
+watch: {
+	info: {
+		handler(newVal, oldVal) {
+			console.log(newVal, oldVal)
+		}
+	},
+	// 表示页面初次渲染好之后，就立即触发当前的 watch 侦听器
+	deep: true
+}
+
+````
+
+
+
+**5.** **监听对象单个属性的变化**
+
+如果**只想监听对象中单个属性的变化**，则可以按照如下的方式定义 watch 侦听器：
+
+````
+data: {
+  // 用户的信息对象
+	info: {
+		username: 'admin'
+	}
+},
+watch: {
+	'info.username' (newVal) {
+		console.log(newVal)
+	}
+}
+
+
+````
+
+### 计算属性
+
+1、什么是计算属性
+
+计算属性指的是**通过一系列运算之后**，最终得到一个**属性值**。 这个**动态计算出来的属性值**可以被模板结构或 methods 方法使用。示例代码如下：
+
+2、计算属性的特点
+
+（1）虽然计算属性在**声明的时候**被定义为**方法**，但是计算属性的**本质是一个属性**
+（2）计算属性会**缓存计算的结果**，只有计算属性**依赖的数据变化时**，才会重新进行运算
+
+## axios
+
+> axios 是一个专注于网络请求的库！
+
+
+
+### axios 的基本使用
+
+1、发起 GET 请求：
+
+```js
+axios({
+  // 请求方式
+  method: 'GET',
+  // 请求的地址
+  url: 'http://www.liulongbin.top:3006/api/getbooks',
+  // URL 中的查询参数
+  params: {
+    id: 1
+  }
+}).then(function (result) {
+  console.log(result)
+})
+```
+
+2、发起 POST 请求：
+
+```js
+document.querySelector('#btnPost').addEventListener('click', async function () {
+  // 如果调用某个方法的返回值是 Promise 实例，则前面可以添加 await！
+  // await 只能用在被 async “修饰”的方法中
+  const { data: res } = await axios({
+    method: 'POST', 
+    url: 'http://www.liulongbin.top:3006/api/post',
+    data: {
+      name: 'zs',
+      age: 20
+    }
+  })
+
+  console.log(res)
+})
+```
+
+### vue-cli
+
+1、什么是单页面应用程序
+
+**单页面应用程序**（英文名:**S**ingle **P**age **A**pplication）简称 SPA，顾名 思义，指的是**一个 Web 网站中只有唯一的一个 HTML 页面**，所有的功能 与交互都在这唯一的一个页面内完成。
+
+例如资料中的这个 Demo 项目：
+
+css	images	js 	index.html
+
+2、什么是 vue-cli
+
+**vue-cli 是 Vue.js 开发的标准工具**。它简化了程序员基于 webpack 创建工程化的 Vue 项目的过程。 引用自 vue-cli 官网上的一句话:
+
+程序员可以**专注在撰写应用上**，而不必**花好几天**去**纠结** webpack 配置的问题。 
+
+中文官网：https://cli.vuejs.org/zh/
+
+3、安装和使用
+
+vue-cli 是 npm 上的一个**全局包**，**使用 npm install** 命令，即可方便的把它安装到自己的电脑上：
+**npm install -g @vue/cli**
+
+基于 vue-cli 快速生成工程化的 Vue 项目:
+
+**vue create 项目的名称**
+
+（1）Manually select features		// 手动选择功能
+
+- Choose Vue version				 // 选择 vue 版本
+- Babel                                       // 把Babel、ESlint 等插件的配置项，放到自己独立的配置文件中
+- Css Pre-processors                 // css 预处理器
+
+4、vue 项目的运行流程
+
+在工程化的项目中，vue 要做的事情很单纯：通过 **main.js** 把 **App.vue** 渲染到 **index.html** 的指定区域中。
+
+其中:
+（1）**App.vue** 用来编写待渲染的**模板结构**
+（2）**index.html** 中需要预留一个 **el 区域**
+（3）**main.js** 把 App.vue 渲染到了 index.html 所预留的区域中
+
+### vue 组件
+
+1、什么是组件化开发
+
+**组件化开发**指的是：根据**封装**的思想，**把页面上可重用的 UI 结构封装为组件**，从而方便项目的开发和维护。
+
+2、vue 中的组件化开发
+
+vue 是一个**支持组件化开发**的前端框架。
+vue 中规定：**组件的后缀名**是 **.vue**。之前接触到的 App.vue 文件本质上就是一个 vue 的组件。
+
+3、vue 组件的三个组成部分
+
+每个 .vue 组件都由 3 部分构成，分别是：
+
+- **template** -> 组件的**模板结构**
+- **script** -> 组件的 **JavaScript 行为**
+- **style** -> 组件的**样式**
+
+其中，**每个组件中必须包含 template 模板结构**，而 **script** 行为和 **style 样式**是**可选的**组成部分。
+
+> 组件是被UI结构的复用
+
+3.1、template
+
+vue 规定：每个组件对应的**模板结构**，需要定义到 **<template> 节点**中。
+
+````
+<template>
+	<!-- 当前组件的 DOM 结构，需要定义到 template 标签的内部
+</template>
+````
+
+注意：
+
+- template 是 vue 提供的**容器标签**，只起到**包裹性质的作用**，它不会被渲染为真正的 DOM 元素
+- template 中只能包含唯一的根节点
+
+3.2、script
+
+vue 规定:开发者可以在 <script> 节点中**封装组件的 JavaScript 业务逻辑**。 <script > 节点的基本结构如下：
+
+````
+<script>
+// 今后，组件相关的 data 数据，methods 方法等。
+// 都需要定义到 export default 所导出的对象中。
+export default {}
+</script>
+````
+
+.vue 组件中的 data 必须是函数
+
+vue 规定:.vue 组件中的 data **必须是一个函数**，**不能**直接指向一个数据对象。 因此在组件中定义 data 数据节点时，下面的方式是**错误的**：
+
+````
+data: {		// 组件中，不能直接让 data 指向一个数据对象（会报错）
+	count: 0
+}
+````
+
+会导致**多个组件实例**共用**同一份数据**的问题，请参考官方给出的示例: https://cn.vuejs.org/v2/guide/components.html#data-必须是一个函数
+
+3.3、style
+
+vue 规定:组件内的 <style> 节点是**可选的**，开发者可以在 <style> 节点中**编写样式美化当前组件的 UI 结构**。 <script > 节点的基本结构如下：
+
+````
+<style>
+h1 {
+	font-weight: normal;
+}
+</style>
+````
+
+让 style 中支持 less 语法
+
+在 <style> 标签上添加 **lang="less"** 属性，即可使用 less 语法编写组件的样式:
+
+````
+<style lang="less">
+h1 {
+	span {}
+}
+</style>
+````
+
+4、组件之间的**父子关系**
+
+![图片](./images/component.png)
+
+- 组件在被封装好之后，彼此之间是相互独立的，不存在父子关系
+- 在使用组件的时候，根据彼此的嵌套关系，形成了父子关系、兄弟关系
+
+
+4.1、使用组件的**三个步骤**
+
+步骤3：以**标签形式**使用刚才注册的组件
+
+步骤1：使用 import 语法**导入需要的组件**
+
+步骤2：使用 **components** 节点注册组件
+
+4.2、通过 components 注册的是私有子组件
+
+例如：
+在**组件 A** 的 components 节点下，注册了**组件 F**。
+则组件 F 只能用在组件 A 中;不能被用在**组件 C** 中。
+
+请大家思考两个问题:
+（1）为什么 F 不能用在组件 C 中?
+（2）怎样才能在组件 C 中使用 F?
+
+4.3、注册全局组件
+在 vue 项目的 **main.js** 入口文件中，通过 **Vue.component()** 方法，可以注册全局组件。示例代码如下：
+
+````
+// 导入需要被全局注册的那个组件
+import Count from '@/components/Count.vue'
+
+// 参数1：字符串格式，表示组件的"注册名称"
+// 参数2：需要被全局注册的那个组件
+Vue.component('MyCount', Count)
+````
+
+5、组件的 props
+
+props 是组件的**自定义属性**，在**封装通用组件**的时候，合理地使用 props 可以极大的**提高组件的复用性**! 它的语法格式如下：
+
+````
+export default {
+	// 组件的自定义属性
+	props: ['自定义属性A', '自定义属性B', '自定义属性C...']
+	
+	// 组件的私有数据
+	data() {
+		return { }
+	}
+}
+````
+
+5.1、props 是只读的
+
+vue 规定:组件中封装的自定义属性是**只读的**，程序员**不能直接修改** props 的值。否则会直接报错：
+
+要想修改 props 的值，可以**把 props 的值转存到 data 中**，因为 data 中的数据都是可读可写的!
+
+````
+props: ['init'],
+data() {
+	return {
+		count: this.init	// 把 this.init 的值转存到 count
+	}
+}
+````
+
+5.2、props 的 default 默认值
+在声明自定义属性时，可以通过 **default** 来**定义属性的默认值**。示例代码如下：
+
+````
+export default {
+	props: {
+		inot: {
+			// 用 default 属性定义属性的默认值
+			default: 0
+		}
+	}
+}
+````
+
+5.3、props 的 type 值类型
+在声明自定义属性时，可以通过 **type** 来**定义属性的值类型**。示例代码如下：
+
+````
+export default {
+	props: {
+		inot: {
+			// 用 default 属性定义属性的默认值
+			default: 0,
+			// 用 type 属性定义属性的值类型，
+			// 如果传递过来的值不符合些类型，则会在终端报错
+			type: Number
+		}
+	}
+}
+````
+
+5.4、props 的 required 必填项
+
+在声明自定义属性时，可以通过 required 选项，将属性设置为必填项，强制用户必须传递属性的值。示例代 码如下:
+
+````
+export default {
+	props: {
+		inot: {
+			// 值类型为 Number 数字
+			type: Number,
+			// 必填项校验
+			required: true
+		}
+	}
+}
+````
+
