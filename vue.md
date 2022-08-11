@@ -42,7 +42,7 @@ node.js中默认仅支持CommonJS模块化规范，若想基于node.js体验与�
 （3）直接导入并执行模块中的代码
 
 ​	5.1、默认导出
-	export default 默认导出的成员
+​	export default 默认导出的成员
 
 ````
 let n1 = 10
@@ -2017,12 +2017,727 @@ export default {
 
 > 注意：**生命周期**强调的是**时间段**，**生命周期函数**强调的是**时间点**。
 
+2、组件生命周期函数的分类
 
+分三个阶段：
 
+（1）组件创建阶段
 
+| 顺序 | 生命周期     | 作用                                                         |
+| ---- | ------------ | ------------------------------------------------------------ |
+| 1    | new Vue()    | 创建生命周期                                                 |
+| 2    | beforeCreate | 刚开始创建之前<br />props/data/methods 都是不可用状态        |
+| 3    | **created**  | 在内存里创建完毕<br />**props/data/methods 处于可用状态**<br />**可以发起 Ajax 请求拿数据**<br />**组件的模板结构尚未生成，不能操作 DOM** |
+| 4    | beforeMount  | 在渲染组件之前<br />**html 结构已经在内存中**                |
+| 5    | **mounted**  | 组件成功渲染到浏览器<br />**可以操作 DOM**                   |
+
+（2）组件运行阶段
+
+| 顺序 | 生命周期     | 作用                                         |
+| ---- | ------------ | -------------------------------------------- |
+| 1    | beforeUpdate | 组件更新之前<br />**数据更新，DOM 没有渲染** |
+| 2    | **updated**  | 更新之后<br />**重新渲染 DOM**               |
+
+> beforeUpdate和 updated 最少运行0次，最多无限次
+
+（3）组件销毁阶段
+
+| 顺序 | 生命周期      | 作用                                         |
+| ---- | ------------- | -------------------------------------------- |
+| 1    | beforeDestroy | 组件销毁之前<br />**将要销毁，组件正常工作** |
+| 2    | Destroyed     | 销毁之后<br />**DOM 被移除**                 |
+
+3、生命周期图示
+
+![lifecycle](/Users/wanglei/workspace/xeon/MdData/images/lifecycle.png)
 
 ### 组件之间的数据共享
 
+1、组件之间的关系
+
+在项目开发中，组件之间的最常见的关系分为如下两种：
+
+（1）父子关系
+（2）兄弟关系
+
+组件之间的关系
+
+```mermaid
+graph TB;
+
+
+a((A))-->b
+a((A))-->c
+b((B))-->d
+c((C))-->e((E))
+c((C))-->f((F))
+d((D))-->g((G))
+d((D))-->h((H))
+f((F))-->i((I))
+f((F))-->j((J))
+```
+
+2、父子组件之间的数据共享
+
+父子组件之间的数据共享又分为：
+
+（1）**父 -> 子**共享数据
+（2）**子 -> 父**共享数据
+
+2.1、父组件向子组件共享数据
+
+父组件向子组件共享数据需要使用**自定义属性**。示例代码如下：
+
+````
+<Son :msg="message" :user="userinfo"></Son>
+
+data() {
+	return {
+		message: "hellow vue.js",
+		userinfo: { name: 'xeon', age: 20}
+	}
+}
+````
+
+````
+<p>{{ msg }}</p>
+<p>{{ info }}</p>
+
+props: ['msg', 'user']
+````
+
+2.2、子组件向父组件共享数据
+
+子组件向父组件共享数据使用**自定义事件**。示例代码如下：
+
+ ````
+ // 字组件
+ export default {
+ 	data() {
+ 		return { count: 0}
+ 	},
+ 	methods: {
+ 		add() {
+ 			this.count += 1
+ 			// 修改数据时，通过 $emit()触发自定义事件
+ 			this.$emit('numchange', this.count)
+ 		}
+ 	}
+ }
+ ````
+
+````
+// 父组件
+<Son @numchang="getNewCount"></Son>
+export default {
+	data() {
+		return { countFromSon: 0}
+	},
+	methods: {
+		getNewCount(val) {
+			this.countFromSon = val
+		}
+	}
+}
+````
+
+3、兄弟组件之间的数据共享
+
+在 **vue2.x** 中，兄弟组件之间数据共享的方案是 **EventBus**。
+
+````
+import bus from './eventBus.js’
+export default { 
+	data() {
+		return {
+			msg: 'hello vue.js'
+		}
+	},
+	methods: { 
+		sendMsg() {
+			bus.$emit('share', this.msg)
+		}
+	}
+}
+//兄弟组件 A(数据发送方)
+````
+
+````
+import Vue from 'vue'
+
+// 向外共享 Vue 的实例对象
+export default new Vue()
+
+//eventBus.js
+````
+
+````
+import bus from './eventBus.js'
+export default {
+	data() {
+		return {
+			msgFromLeft: ''
+		}
+	},
+	created() {
+		bus.$on('share', val => {
+			this.msgFromLeft = val
+		})
+	}
+}
+// 兄弟组件 C(数据接收方)
+````
+
+
+
+**EventBus** **的使用步骤**
+
+（1）创建 **eventBus.js** 模块，并向外共享一个 **Vue 的实例对象**
+（2）在数据**发送方**，调用 **bus.$emit**('事件名称', 要发送的数据) 方法**触发自定义事件**
+（3）在数据**接收方**，调用 **bus.$on**('事件名称', 事件处理函数) 方法**注册一个自定义事件**
+
 ### ref 引用
 
-### 购物车案例
+1、什么是 ref 引用
+
+ref 用来辅助开发者在**不依赖于 jQuery 的情况下**，获取 DOM 元素或组件的引用。
+
+````
+每个 vue 的组件实例上，都包含一个 $refs 对象，里面存储着对应的 DOM 元素或组件的引用。默认情况下， 组件的 $refs 指向一个空对象。
+````
+
+2、使用 ref 引用 DOM 元素
+
+如果想要使用 ref **引用页面上的 DOM 元素**，则可以按照如下的方式进行操作:
+
+3、使用 ref 引用组件实例
+
+如果想要使用 ref **引用页面上的组件实例**，则可以按照如下的方式进行操作:
+
+4、控制文本框和按钮的按需切换
+
+通过布尔值 inputVisible 来控制组件中的文本框与按钮的按需切换。示例代码如下:
+
+5、让文本框自动获得焦点
+
+当文本框展示出来之后，如果希望它立即获得焦点，则可以为其添加 ref 引用，并调用原生 DOM 对象的 **.focus()** 方法即可。示例代码如下:
+
+6、this.$nextTick(cb) 方法
+
+组件的 **$nextTick(cb)** 方法，会把 cb 回调**推迟到下一个 DOM 更新周期之后执行**。通俗的理解是：等组件的 DOM 更新完成之后，再执行 cb 回调函数。从而能保证 cb 回调函数可以操作到最新的 DOM 元素。
+
+### 动态组件
+
+1、什么是动态组件
+
+动态组件指的是**动态切换组件的显示与隐藏**。
+
+2、如何实现动态组件渲染
+
+vue 提供了一个内置的 <component> 组件，专门用来实现动态组件的渲染。示例代码如下：
+
+````
+data() {
+	// 1. 当前要渲染的组件名称
+	return {comName: 'Left'}
+}
+<!-- 2. 通过 is 属性，动态指定要渲染的组件 -->
+<component :is="comName"></component>
+<!-- 3. 点击按钮，动态切换组件的名称 -->
+<button @click="comName = 'Left'">展示 Left 组件</button>
+<button @click="comName = 'Right'">展示 Right 组件</button>
+````
+
+3、使用 keep-alive 保持状态
+
+默认情况下，切换动态组件时**无法保持组件的状态**。此时可以使用 vue 内置的 **<keep-alive>** 组件保持动态组 件的状态。示例代码如下：
+
+````
+<keep-alive>
+	<component :is="comName"></component>
+</keep-alive>
+````
+
+4、keep-alive 对应的生命周期函数
+
+当组件被缓存时，会自动触发组件的 deactivated 生命周期函数。 当组件被激活时，会自动触发组件的 activated 生命周期函数。
+
+5、keep-alive 的 include 属性
+include 属性用来指定：只有**名称匹配的组件**会被缓存。多个组件名之间使用**英文的逗号**分隔：
+
+````
+<keep-alive include="MyLeft,MyRight">
+	<component :is="comName"></component>
+</keep-alive>
+````
+
+### 插槽
+
+1、什么是插槽
+
+**插槽**(**Slot**)是 vue 为**组件的封装者**提供的能力。允许开发者在封装组件时，把**不确定的**、**希望由用户指定的部分**定义为插槽。
+
+可以把插槽认为是组件封装期间，为用户预留的**内容的占位符**。
+
+2、体验插槽的基础用法
+
+在封装组件时，可以通过 **<slot>** 元素**定义插槽**，从而**为用户预留内容占位符**。示例代码如下：
+
+2.1、没有预留插槽的内容会被丢弃
+
+如果在封装组件时**没有预留任何 <slot> 插槽**，则用户提供的任何**自定义内容**都**会被丢弃**。示例代码如下：
+
+2.2、后备内容
+
+封装组件时，可以为预留的 <slot> 插槽提供**后备内容**(默认内容)。如果组件的使用者没有为插槽提供任何 内容，则后备内容会生效。示例代码如下：
+
+3、具名插槽
+
+如果在封装组件时**需要预留多个插槽节点**，则需要为每个 <slot> 插槽指定**具体的 name 名称**。这种**带有具体名称的插槽**叫做“具名插槽”。示例代码如下：
+
+3.1、为具名插槽提供内容
+
+在向具名插槽提供内容的时候，我们可以在一个 **<template>** 元素上使用 **v-slot** 指令，并以 v-slot 的参数的 形式提供其名称。示例代码如下：
+
+3.2、具名插槽的简写形式
+
+跟 v-on 和 v-bind 一样，v-slot 也有缩写，即把参数之前的所有内容 (**v-slot:**) 替换为字符 **#**。例如 **v-slot:**header 可以被重写为 **#**header：
+
+4、作用域插槽
+
+在封装组件的过程中，可以为预留的 <slot> 插槽绑定 props 数据，这种**带有 props 数据的 <slot>** 叫做“**作用域插槽**”。示例代码如下：
+
+4.1、使用作用域插槽
+
+可以使用 **v-slot:** 的形式，接收作用域插槽对外提供的数据。示例代码如下：
+
+4.2、解构插槽 Prop
+
+作用域插槽对外提供的数据对象，可以使用**解构赋值**简化数据的接收过程。示例代码如下：
+
+````
+<slot v-for="item in list" msg="hello vue" :user="item">
+
+<myTemp>
+	<template #default="{msg, user}">
+		<p>{{user.id}}</p>
+		<p>{{user.name}}</p>
+		<p>{{user.state}}</p>
+	</template>
+</myTemp>
+````
+
+### 自定义指令
+
+1、什么是自定义指令
+
+vue 官方提供了 v-text、v-for、v-model、v-if 等常用的指令。除此之外 vue 还允许开发者自定义指令。
+
+2、自定义指令的分类
+
+vue 中的自定义指令分为两类，分别是：
+
+- 私有自定义指令
+- 全局自定义指令
+
+3、私有自定义指令
+
+在每个 vue 组件中，可以在 **directives** 节点下声明**私有自定义指令**。示例代码如下：
+
+````
+directives: {
+	color: {
+		// 为绑定到的 HTML 元素设置红色的文字
+		bind(el) {
+			// 形参中的 el 是绑定了此指定的，原生的 DOM 对象
+			el.style.color = 'red'
+		}
+	}
+}
+````
+
+4、使用自定义指令
+
+在使用自定义指令时，需要加上 **v-** 前缀。示例代码如下：
+
+````
+<h1 v-color>Hello Vue</h1>
+````
+
+5、为自定义指令动态绑定参数值
+
+在 template 结构中**使用自定义指令**时，可以通过等号(**=**)的方式，为当前指令**动态绑定参数值**：
+
+6、通过 **binding** 获取指令的参数值
+
+在声明自定义指令时，可以通过形参中的**第二个参数**，来接收指令的参数值：
+
+````
+directives: {
+	color: {
+		// 为绑定到的 HTML 元素设置红色的文字
+		bind(el, binding) {
+			// 形参中的 el 是绑定了此指定的，原生的 DOM 对象
+			el.style.color = binding.value
+		}
+	}
+}
+````
+
+7、update 函数
+
+bind 函数**只调用 1 次**：当指令第一次绑定到元素时调用，**当 DOM 更新时 bind 函数不会被触发**。 **update** 函数会在**每次 DOM 更新时**被调用。示例代码如下:
+
+````
+directives: {
+	color: {
+		// 当指令第一次被绑定到元素时被调用
+		bind(el, binding) {
+			el.style.color = binding.value
+		},
+		// 每次 DOM 更新时被调用
+		update(el, binding) {
+			el.style.color = binding.value
+		}
+	}
+}
+````
+
+8、函数简写
+
+如果 **bind** 和**update** 函数中的**逻辑完全相同**，则**对象格式**的自定义指令可以简写成**函数格式**：
+
+````
+directives: {
+	// 在 insert 和 update 时，会触发相同的业务逻辑
+	color(el, binding) {
+		el.style.color = binding.value
+	}
+}
+````
+
+9、全局自定义指令
+
+全局共享的自定义指令需要通过“**Vue.directive()**”进行声明，示例代码如下：
+
+````
+// 参数1：字符串，表示全局自定义指令的名字
+// 参数2：对象，用来接收指令的参数值
+Vue.directive('color', function(el, binding) {
+	el.style.color = binding.value
+})
+````
+
+## 路由
+
+### 前端路由的概念与原理
+
+1、什么是路由
+
+路由(英文:router)就是**对应关系**。
+
+3、SPA 与前端路由
+
+SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，**所有组件的展示与切换**都在这唯一的一个页面内完成。 此时，**不同组件之间的切换**需要通过**前端路由**来实现。
+
+结论:在 SPA 项目中，**不同功能之间的切换**，要**依赖于前端路由**来完成!
+
+4、什么是前端路由
+
+通俗易懂的概念：**Hash 地址**与**组件**之间的**对应关系**。
+
+5、前端路由的工作方式
+
+（1）用户**点击**了页面上的**路由链接**
+（2）导致了 **URL 地址栏**中的 **Hash 值**发生了变化
+（3）**前端路由监听了到 Hash 地址的变化**
+（4）前端路由把当前 **Hash 地址对应的组件**渲染都浏览器中
+
+> 结论：前端路由，指的是 **Hash 地址**与**组件之间**的**对应关系**!
+
+6、实现简易的前端路由
+
+步骤1：通过 **<component>** 标签，结合 **comName** 动态渲染组件。示例代码如下:
+
+步骤2：在 App.vue 组件中，为 **<a> 链接**添加对应的 **hash 值**：
+
+步骤3：在 **created** 生命周期函数中，监听浏览器地址栏中 **hash 地址的变化**，动态切换要展示的组件的名称：
+
+### vue-router 的基本使用
+
+1、什么是 vue-router
+
+**vue-router** 是 vue.js 官方给出的**路由解决方案**。它只能结合 vue 项目进行使用，能够轻松的管理 SPA 项目 中组件的切换。
+
+vue-router 的官方文档地址:https://router.vuejs.org/zh/
+
+2、vue-router 安装和配置的步骤
+
+（1）安装 vue-router 包
+
+（2）**创建路由模块**
+
+（3）导入并挂载路由模块
+
+（4）声明**路由链接**和**占位符**
+
+2.1、在项目中安装 vue-router
+
+在 vue2 的项目中，安装 vue-router 的命令如下：
+
+````
+npm i  vue-router@3.5.2 -S
+````
+
+2.2、创建路由模块
+
+在 **src** 源代码目录下，新建 **router/index.js** 路由模块，并初始化如下的代码：
+
+````
+// 1. 导入 Vue 和 VueRouter 的包
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+// 2. 调用 vue.use() 函数，把 VueRouter 安装 Vue 的插件
+Vue.use(VueRouter)
+
+// 3. 创建路由的实例对象
+const router = new VueRouter()
+
+// 4. 向外共享路由的实例对象
+export default router
+````
+
+2.3、导入并挂载路由模块
+
+在 src/**main.js** 入口文件中，导入并挂载路由模块。示例代码如下：
+
+````
+// 1. 导入路由模块
+import router from '@/router/index.js'
+
+new Vue({
+  render: h => h(App),
+  // 2. 挂载路由模块
+  router: router
+}).$mount('#app')
+````
+
+2.4、声明**路由链接**和**占位符**
+在 src/App.vue 组件中，使用 vue-router 提供的 **<router-link>** 和 **<router-view>** 声明路由链接和占位符：
+
+````
+<router-link to="#/home">首页</router-link>
+<router-link to="#/movie">电影</router-link>
+<router-link to="#/about">关于</router-link>
+````
+
+
+
+3、声明路由的匹配规则
+在 src/router/index.js 路由模块中，通过 **routes 数组**声明路由的匹配规则。示例代码如下：
+
+````
+// 导入需要的组件
+import Home from '@/components/Home.vue'
+import Movie from '@/components/Movie.vue'
+import About from '@/components/Movie.vue'
+
+const router = new VueRouter({
+  // routes 是一个数组，作用：定义 "hash 地址" 与 "组件" 之间的的对应关系
+  routes: [
+    // 默认 首页
+    { path: '/', component: Home },
+    { path: '/home', component: Home },
+    { path: '/movie', component: Movie },
+    { path: '/about', component: About }
+  ]
+})
+````
+
+### vue-router 的常见用法
+
+1、路由重定向
+
+**路由重定向**指的是：用户在访问**地址 A** 的时候，**强制用户跳转**到地址 C ，从而展示特定的组件页面。 通过路由规则的 **redirect** 属性，指定一个新的路由地址，可以很方便地设置路由的重定向：
+
+````
+const router = new VueRouter({
+  routes: [
+    // 默认 首页
+    { path: '/', redirect: '/home' },
+    { path: '/home', component: Home }
+  ]
+})
+````
+
+2、嵌套路由
+
+通过路由实现**组件的嵌套展示**，叫做嵌套路由。
+
+（1）模板内容中又有**子级路由链接**
+
+（2）点击**子级路由链接**显示**子级模板内容**
+
+3.1、声明子路由链接和子路由占位符
+
+在 **About.vue** 组件中，声明  和 tab2 的**子路由链接**以及**子路由占位符**。示例代码如下：
+
+````
+<router-link to="/about/tab1">tab1</router-link>
+<router-link to="/about/tab2">tab2</router-link>
+
+<router-view></router-view>
+````
+
+3.2 通过 **children** 属性声明**子路由规则**
+
+在 src/router/index.js 路由模块中，导入需要的组件，并使用 **children 属性**声明子路由规则：
+
+4、动态路由匹配
+
+思考:有如下 3 个路由链接：
+
+````
+<router-link to="/movie/1">电影1</router-link>
+<router-link to="/movie/2">电影2</router-link>
+<router-link to="/movie/3">电影3</router-link>
+
+{ path: '/movie/1', component: Movie }
+{ path: '/movie/2', component: Movie }
+{ path: '/movie/3', component: Movie }
+
+````
+
+> 缺点：路由规则的**复用性差**
+
+4.1、动态路由的概念
+
+动态路由指的是:把 Hash 地址中**可变的部分**定义为**参数项**，从而**提高路由规则的复用性**。 在 vue-router 中使用**英文的冒号**(**:**)来定义路由的参数项。示例代码如下：
+
+````
+// 路由中的动态参数以：进行声明，冒号后面的是动态参数的名称
+{ path: '/movie/:id', component: Movie }
+
+// 将以下 3 个路由规则，合并成了一个，提高了路由规则的复用性
+{ path: '/movie/1', component: Movie }
+{ path: '/movie/2', component: Movie }
+{ path: '/movie/3', component: Movie }
+````
+
+4.2、$route.params 参数对象
+
+在**动态路由**渲染出来的组件中，可以使用 this.**$route.params** 对象访问到动态匹配的参数值。
+
+````
+this.$route.params.xxx
+````
+
+4.3、使用 props 接收路由参数
+
+**为了简化路由参数的获取形式**，vue-router 允许在**路由规则**中**开启 props 传参**。示例代码如下：
+
+````
+{ path: '/movie/:id', component: Movie, props: true }
+
+export default {
+	props: ['id']
+}
+````
+
+5、声明式导航 & 编程式导航
+
+在浏览器中，**点击链接**实现导航的方式，叫做**声明式导航**。例如：
+
+- 普通网页中点击 **<a> 链接**、vue 项目中点击 **<router-link>** 都属于声明式导航
+
+在浏览器中，**调用 API 方法**实现导航的方式，叫做**编程式导航**。例如：
+
+- 普通网页中调用 **location.href** 跳转到新页面的方式，属于编程式导航
+
+5.1、vue-router 中的编程式导航 API
+
+vue-router 提供了许多编程式导航的 API，其中最常用的导航 API 分别是：
+
+（1）this.$router.**push**('hash 地址')
+
+````
+this.$router.push('/movie')
+````
+
+- 跳转到指定 hash 地址，并**增加**一条历史记录
+
+（2）this.$router.**replace**('hash 地址')
+
+````
+this.$router.replace('/movie')
+````
+
+- 跳转到指定的hash地址，并**替换掉当前的**历史记录
+
+（3）this.$router.**go**(数值 n)
+
+````
+this.$router.go(n)
+````
+
+- 实现导航历史前进、后退
+
+> push 和 replace 的区别：
+>
+> - push 会**增加一条历史记录**
+> - replace 不会增加历史记录，而是**替换掉当前的历史记录**
+
+5.5、$router.go 的简化用法
+
+在实际开发中，一般只会前进和后退一层页面。因此 vue-router 提供了如下两个便捷方法：
+
+（1）$router.**back**()
+
+- 在历史记录中，**后退**到上一个页面
+
+（2）$router.**forward**()
+
+- 在历史记录中，**前进**到下一个页面
+
+6、导航守卫
+
+**导航守卫**可以**控制路由的访问权限**。示意图如下：
+
+6.1、全局前置守卫
+
+每次发生路由的**导航跳转**时，都会触发**全局前置守卫**。因此，在全局前置守卫中，程序员可以对每个路由进行 **访问权限**的控制：
+
+````
+const router = new VueRouter({...})
+
+// 全局前置守卫
+router.beforeEach(fn)
+````
+
+6.2、守卫方法的 3 个形参
+
+**全局前置守卫**的回调函数中接收 3 个形参，格式为：
+
+````
+const router = new VueRouter({...})
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+	// to 是将要访问的路由的信息对象
+	// from 是将要离开的路由的信息对象
+	// next 是一个函数，调用 next() 表示放行，允许这次路由导航
+})
+````
+
+6.3、next 函数的 3 种调用方式
+
+参考示意图，分析 next 函数的 3 种调用方式最终导致的结果：
+
+当前用户**拥有**后台主页的访问权限，直接放行：next()
+当前用户**没有**后台主页的访问权限，**强制其跳转到登录页面**：next('**/login**')
+当前用户**没有**后台主页的访问权限，**不允许跳转到后台主页**：next(**false**)
+
+6.4、控制后台主页的访问权限
+
+### 后台管理案例
