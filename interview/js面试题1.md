@@ -256,6 +256,100 @@ ES6有class继承：
 （4）class默认为严格模式
 （5）在子类中，调用extends方法，可以调用父类的属性，用eat调用父类的方法
 
+28、JS 中的主要有哪几类错误
+
+有三类的错误
+
+加载时错误、运行时错误、逻辑错误
+
+29、JS中如何将页面重定向到另一个页面
+
+location.href：window.location.href = "https://www.onlineinterviewquesttions.com/"
+
+location.replace：window.location.replace("https://www.onlineinterviewquesttions.com/;")
+
+30、JS中的Array.splice()和Array.slice()方法有什么区别
+
+slice和splice虽然都是对于数组对象进行截取，但是二者还是存在明显区别，函数参数上slice和splice第一个参数都是截取开始位置，slice第二个参数是截取的结束位置（不包含），而splice第二个参数（表示这个从开始位置截取的长度），slice不会对原数组产生变化，而splice会直播剔除原数组中的截取数据
+
+31、undefined、null 和 undeclared 有什么区别
+
+- null 表示“没有对象”，即该处不应该有值，转为数值时为0。
+- undefined表示“缺少值”，就是此处应该有一个值，但是还没有定义
+- undeclared表示语法错误，没有申明直接使用，js无法找到对应的上下文
+
+32、JS中的高阶函数
+
+高阶函数是JS函数式编程的最佳特性。它是以函数为参数并返回函数作为结果的函数。一些内置的高阶函数是map、filter、reduce等等
+
+33、如何区分声明函数和表达式函数
+
+````
+// 声明函数
+function hello() {
+    return "HELLO"
+}
+// 表达式函数
+var h1 = function hello() {
+    return "HELLO"
+}
+````
+
+34、什么是宏任务和微任务，两者有什么区别
+
+宏任务：setTimeout、setInterval、ajax、DOM事件
+
+微任务：promise、async/await
+
+微任务执行时机要比宏任务早
+
+宏任务：DOM渲染后触发，如setTimeout
+
+微任务：DOM渲染前触发，如promise
+
+35、promise有哪三种状态？如何变化
+
+promise有三种状态：pending、resolved、rejected
+
+pending -> resolved、pending -> rejected 变化是不可逆的状态的表现
+
+pending状态，不会触发 then 和 catch
+
+resolved状态，会触发后续的 then 回调函数
+
+rejected状态，会触发后续的 catch 回调函数
+
+36、async/await
+
+async/await 是同步语法，解决异步回调 callback hell 问题，promise then catch 链式调用，但也是基于回调函数的。
+
+async/await 和 promise 的关系：async/await 是解决异步回调的，但和 promise 并不互斥，两者相辅相成。
+执行 async 函数，返回的是 promise 对象
+await 相当于 promise 的 then
+try...catch 可捕获异常，代替了 promise 的 catch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
