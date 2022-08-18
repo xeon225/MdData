@@ -604,10 +604,280 @@ npm 规定，在项目根目录中，**必须**提供一个叫做 **package.json
 
 - 项目的名称、版本号、描述等
 - 项目中都用到了哪些包
-- 哪些包只在开发期间会用到
-- 那些包在开发和部署时都需要用到
+- 哪些包只在**开发期间**会用到
+- 那些包在**开发**和**部署**时都需要用到
+
+1. 多人协作的问题
+
+2. 如何记录项目中安装了哪些包
+
+在**项目根目录**中，创建一个叫做 **package.json** 的配置文件，即可用来记录项目中安装了哪些包。从而方便剔除 node_modules 目录之后，在团队成员之间共享项目的源代码。
+
+> **注意**:今后在项目开发中，一定要把 node_modules 文件夹，添加到 .gitignore 忽略文件中。
+
+3. 快速创建 package.json
+
+npm 包管理工具提供了一个**快捷命令**，可以在**执行命令时所处的目录中**，快速创建 package.json 这个包管理 配置文件:
+
+````
+npm init -y
+````
+
+注意:
+ 1 上述命令**只能在英文的目录下成功运行**!所以，项目文件夹的名称一定要使用英文命名，**不要使用中文，不能出现空格**。 2 运行 npm install 命令安装包的时候，npm 包管理工具会自动把**包的名称**和**版本号**，记录到 package.json 中。
+
+4. dependencies 节点
+
+package.json 文件中，有一个 **dependencies** 节点，专门用来记录您使用 npm install 命令安装了哪些包。
+
+5. 一次性安装所有的包
+
+当我们拿到一个剔除了 node_modules 的项目之后，需要先把所有的包下载到项目中，才能将项目运行起来。 否则会报类似于下面的错误:
+
+可以运行 npm install 命令(或 npm i)一次性安装所有的依赖包:
+
+````
+npm install
+npm i
+````
+
+6. 卸载包
+
+可以运行 **npm uninstall** 命令，来卸载指定的包:
+
+````
+npm uninstall 包名称
+````
+
+注意:npm uninstall 命令执行成功后，会把卸载的包，自动从 package.json 的 dependencies 中移除掉。
+
+7. devDependencies 节点
+
+如果某些包**只在项目开发阶段**会用到，在**项目上线之后不会用到**，则建议把这些包记录到 devDependencies 节点中。 与之对应的，如果某些包在开发和项目上线之后都需要用到，则建议把这些包记录到 dependencies 节点中。
+
+您可以使用如下的命令，将包记录到 devDependencies 节点中:
+
+````
+npm i 包名 -D
+npm install 包名 --save-dev
+````
+
+3.4 解决下包速度慢的问题 1. 为什么下包速度慢
+
+在使用 npm 下包的时候，默认从国外的 https://registry.npmjs.org/ 服务器进行下载，此时，网络数据的传输需要经 过漫长的海底光缆，因此下包速度会很慢。
+
+扩展阅读 - 海底光缆:
+
+- https://baike.baidu.com/item/%E6%B5%B7%E5%BA%95%E5%85%89%E7%BC%86/4107830
+- https://baike.baidu.com/item/%E4%B8%AD%E7%BE%8E%E6%B5%B7%E5%BA%95%E5%85%89%E7%BC% 86/10520363
+- https://baike.baidu.com/item/APG/23647721?fr=aladdin
+
+2. 淘宝 NPM 镜像服务器
+
+3. 切换 npm 的下包镜像源
+
+下包的镜像源，指的就是下包的服务器地址。
+
+````
+// 通过 npm 包管理器，将 nrm 安装为全局可用的工具
+npm i nrm -g
+// 查看所有可用的镜像源
+nrm ls
+// 将下包的镜像源切换为 taobao 镜像
+nrm use taobao
+````
+
+3.5 包的分类
+
+使用 npm 包管理工具下载的包，共分为两大类，分别是:
+
+- 项目包
+- 全局包
+
+1. 项目包
+
+那些被安装到项目的 node_modules 目录中的包，都是项目包。
+
+项目包又分为两类，分别是:
+
+- **开发依赖包**(被记录到 devDependencies 节点中的包，只在开发期间会用到)
+- **核心依赖包(**被记录到 dependencies 节点中的包，在开发期间和项目上线之后都会用到)
+
+**2.** **全局包**
+
+在执行 npm install 命令时，如果提供了 -g 参数，则会把包安装为全局包。 全局包会被安装到 C:\Users\用户目录\AppData\Roaming\npm\node_modules 目录下。
+
+````
+npm i 包名 -g
+npm uninstall 包名 -g
+````
+
+注意:
+
+（1）只有工具性质的包，才有全局安装的必要性。因为它们提供了好用的终端命令。
+（2）判断某个包是否需要全局安装后才能使用，可以参考官方提供的使用说明即可。
+
+3. i5ting_toc
+
+i5ting_toc 是一个可以把 md 文档转为 html 页面的小工具，使用步骤如下:
+
+````
+// 将 i5ting_toc 安装为全局包
+npm install -g i5ting_toc
+// 调用 i5ting_toc，轻松实现 md 转 html 的功能
+i5ting_toc -f 要转换的 md 文件路径 -o
+````
+
+3.6 规范的包结构
+
+在清楚了包的概念、以及如何下载和使用包之后，接下来，我们深入了解一下包的内部结构。
+
+一个规范的包，它的组成结构，必须符合以下 3 点要求:
+（1）包必须以**单独的目录**而存在
+（2）包的顶级目录下要必须包含 **package.json** 这个包管理配置文件
+（3）package.json 中必须包含 **name**，**version**，**main** 这三个属性，分别代表包的名字、版本号、包的入口。
+
+注意:以上 3 点要求是一个规范的包结构必须遵守的格式，关于更多的约束，可以参考如下网址:
+
+https://yarnpkg.com/zh-Hans/docs/package-json
+
+3.7 开发属于自己的包
+
+1. 需要实现的功能
+
+（1）**格式化日期**
+（2）**转义** HTML 中的**特殊字符**
+（3）**还原** HTML 中的**特殊字符**
+
+````
+const itheima = require('itehima-utils')
+
+const dt = itheima.dateFormat(new Date())
+
+console.log(dt)
+````
 
 
+
+````
+const itheima = require('itehima-utils')
+
+const htmlStr = '<h1 style="color: red;">你好！</h1>'
+
+const str = itheima.htmlEscape(htmlStr)
+````
+
+2. 初始化包的基本结构
+
+（1）新建 itheima-tools 文件夹，作为包的根目录
+
+（2）在 itheima-tools 文件夹中，新建如下三个文件:
+
+- package.json (包管理配置文件)
+- index.js (包的入口文件) 
+- README.md (包的说明文档)
+
+3. 初始化 package.json
+
+4. 在 index.js 中定义格式化时间的方法
+
+````
+function dateFormat(dtStr) {
+  const dt = new Date(dtStr)
+
+  const y = dt.getFullYear()
+  const m = padZero(dt.getMonth())
+  const d = padZero(dt.getDate())
+
+  const hh = padZero(dt.getHours())
+  const mm = padZero(dt.getMinutes())
+  const ss = padZero(dt.getSeconds())
+
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+}
+````
+
+   
+
+5. 在 index.js 中定义转义 HTML 的方法
+
+````
+function htmlEscape(htmlStr) {
+	return htmlStr.replace(/<|>|"|&/g, (match) => {
+    switch (match) {
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '"':
+        return '&quot;'
+      case '&':
+        return '&amp;'
+    }
+  })
+}
+````
+
+6. 在 index.js 中定义还原 HTML 的方法
+
+````
+function htmlUnEscape(str) {
+	return str.replace(/&lt;|&gt;|&qout;|&amp;/g, (match) => {
+    switch (match) {
+      case '&lt;':
+        return '<'
+      case '&gt;':
+        return '>'
+      case '&quot;':
+        return '"'
+      case '&amp;':
+        return '&'
+    }
+  })
+}
+````
+
+7. 将不同的功能进行模块化拆分
+
+（1）将格式化时间的功能，拆分到 src -> **dateFormat.js** 中
+（2）将处理 HTML 字符串的功能，拆分到 src -> **htmlEscape.js** 中
+（3）在 index.js 中，导入两个模块，得到需要向外共享的方法
+（4）在 index.js 中，使用 module.exports 把对应的方法共享出去
+
+8. 编写包的说明文档
+
+包根目录中的 **README.md** 文件，是**包的使用说明文档**。通过它，我们可以事先把包的使用说明，以 markdown 的 格式写出来，方便用户参考。
+
+README 文件中具体写什么内容，没有强制性的要求;只要能够清晰地把包的作用、用法、注意事项等描述清楚即可。 我们所创建的这个包的 README.md 文档中，会包含以下 6 项内容:
+ 安装方式、导入方式、格式化时间、转义 HTML 中的特殊字符、还原 HTML 中的特殊字符、开源协议
+
+3.8 发布包
+
+1. 注册 npm 账号
+
+（1）访问 https://www.npmjs.com/ 网站，点击 **sign up** 按钮，进入注册用户界面
+（2）填写账号相关的信息:Full Name、**Public Email**、**Username**、**Password**
+（3）点击 **Create an Account** 按钮，注册账号
+（4）登录邮箱，**点击验证链接**，进行账号的验证
+
+2. 登录 npm 账号
+
+npm 账号注册完成后，可以在终端中执行 **npm login** 命令，依次输入用户名、密码、邮箱后，即可登录成功。
+
+> 注意:在运行 npm login 命令之前，必须先把**下包的服务器**地址切换为 **npm 的官方服务器**。否则会导致发布包失败!
+
+3. 把包发布到 npm 上
+
+将终端切换到包的根目录之后，运行 **npm publish** 命令，即可将包发布到 npm 上(注意:**包名不能雷同**)。
+
+4. 删除已发布的包
+
+运行 n**pm unpublish 包名 --force** 命令，即可从 npm 删除已发布的包。
+
+注意:
+（1）npm unpublish 命令只能删除 **72 小时以内**发布的包
+（2）npm unpublish 删除的包，在 **24 小时内**不允许重复发布
+（3）发布包的时候要慎重，**尽量不要往 npm 上发布没有意义的包**!
 
 
 
