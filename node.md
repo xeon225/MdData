@@ -879,8 +879,456 @@ npm 账号注册完成后，可以在终端中执行 **npm login** 命令，依�
 （2）npm unpublish 删除的包，在 **24 小时内**不允许重复发布
 （3）发布包的时候要慎重，**尽量不要往 npm 上发布没有意义的包**!
 
-
-
-
-
 ### 模块的加载机制
+
+4.1 优先从缓存中加载
+
+**模块在第一次加载后会被缓存**。 这也意味着多次调用 require() 不会导致模块的代码被执行多次。 注意:不论是内置模块、用户自定义模块、还是第三方模块，它们都会优先从缓存中加载，从而提高模块的加载效率。
+
+4.2 内置模块的加载机制
+
+内置模块是由 Node.js 官方提供的模块，**内置模块的加载优先级最高**。
+例如，require('fs') 始终返回内置的 fs 模块，即使在 node_modules 目录下有名字相同的包也叫做 fs。
+
+4.3 自定义模块的加载机制
+
+使用 require() 加载自定义模块时，必须指定以 ./ 或 ../ 开头的**路径标识符**。在加载自定义模块时，如果没有指定 ./ 或 ../ 这样的路径标识符，则 node 会把它当作内置模块或第三方模块进行加载。
+
+同时，在使用 require() 导入自定义模块时，如果省略了文件的扩展名，则 Node.js 会**按顺序**分别尝试加载以下的文件:
+（1）按照确切的文件名进行加载
+（2）补全 **.js** 扩展名进行加载
+（3）补全 **.json** 扩展名进行加载
+（4）补全 **.node** 扩展名进行加载
+（5）加载失败，终端报错
+
+4.4 第三方模块的加载机制
+
+如果传递给 require() 的模块标识符不是一个内置模块，也没有以 ‘./’ 或 ‘../’ 开头，则 Node.js 会从当前模块的父 目录开始，尝试从 /node_modules 文件夹中加载第三方模块。
+
+**如果没有找到对应的第三方模块，则移动到再上一层父目录中，进行加载，直到文件系统的根目录。** 例如，假设在 'C:\Users\itheima\project\foo.js' 文件里调用了 require('tools')，则 Node.js 会按以下顺序查找:
+（1）C:\Users\itheima\project\node_modules\tools
+（2）C:\Users\itheima\node_modules\tools
+（3）C:\Users\node_modules\tools
+（4）C:\node_modules\tools
+
+4.5 目录作为模块
+
+当把目录作为模块标识符，传递给 require() 进行加载的时候，有三种加载方式:
+（1）在被加载的目录下查找一个叫做 package.json 的文件，并寻找 main 属性，作为 require() 加载的入口
+（2）如果目录里没有 package.json 文件，或者 main 入口不存在或无法解析，则 Node.js 将会试图加载目录下的 index.js 文件。
+（3）如果以上两步都失败了，则 Node.js 会在终端打印错误消息，报告模块的缺失:Error: Cannot find module 'xxx'
+
+## Express
+
+### 初识 Express
+
+1.1 Express 简介
+
+1. 什么是 Express
+
+官方给出的概念:Express 是基于 **Node.js 平台**，快速、开放、极简的 **Web 开发框架**。 
+通俗的理解:Express 的作用和 Node.js 内置的 http 模块类似，**是专门用来创建 Web 服务器的**。 
+**Express** **的本质**:就是一个 npm 上的第三方包，提供了快速创建 Web 服务器的便捷方法。
+
+2. 进一步理解 Express
+
+**思考**:不使用 Express 能否创建 Web 服务器?
+**答案**:能，使用 Node.js 提供的原生 http 模块即可。
+
+**思考**:既生瑜何生亮(有了 http 内置模块，为什么还有用 Express)?
+**答案**:http 内置模块用起来很复杂，开发效率低;Express 是基于内置的 http 模块进一步封装出来的，能够极大的提高开发效率。
+
+**思考**:http 内置模块与 Express 是什么关系?
+**答案**:类似于浏览器中 Web API 和 jQuery 的关系。后者是基于前者进一步封装出来的。
+
+3. Express 能做什么
+
+对于前端程序员来说，最常见的两种服务器，分别是:
+
+- Web 网站服务器:专门对外提供 Web 网页资源的服务器。
+
+- API 接口服务器:专门对外提供 API 接口的服务器。
+
+  使用 Express，我们可以方便、快速的创建 Web 网站的服务器或 API 接口的服务器。
+
+1.2 Express 的基本使用
+
+1. 安装
+
+在项目所处的目录中，运行如下的终端命令，即可将 express 安装到项目中使用:
+
+````
+npm i express@4.17.1
+````
+
+#### 创建基本的 Web 服务器
+
+````
+// 1. 导入 express
+const express = require('express')
+// 2. 创建 web 服务器
+const app = express()
+// 3. 启动 web 服务器
+app.listen(80, () => {
+  console.log('express server running at 127.0.0.1')
+})
+````
+
+#### 监听 GET 请求
+
+通过 app.get() 方法，可以监听客户端的 GET 请求，具体的语法格式如下:
+
+````
+app.get('/user', (req, res) => {...})
+````
+
+#### 监听 POST 请求
+
+通过 app.post() 方法，可以监听客户端的 POST 请求，具体的语法格式如下:
+
+````
+app.post('/user', (req, res) => {...})
+````
+
+#### 把内容响应给客户端
+
+通过 res.send() 方法，可以把处理好的内容，发送给客户端:
+
+````
+// 4. 监听客户端的 GET 和 POST 请求，并向客户端响应具体的内容
+app.get('/user', (req, res) => {
+  // 调用 express 提供的 res.send() 方法，向客户端响应一个 JSON 对象
+  res.send({ name: 'xeon', age: 20, gender: '男'})
+})
+
+app.post('/user', (req, res) => {
+  // 调用 express 提供的 res.send() 方法，向客户端响应一个 文本字符串
+  res.send('请求成功')
+})
+
+````
+
+#### 获取 URL 中携带的查询参数
+
+通过 req.query 对象，可以访问到客户端通过查询字符串的形式，发送到服务器的参数:
+
+````
+app.get('/', (req, res) => {
+  console.log(req.query)
+  res.send(req.query)
+})
+````
+
+#### 获取 URL 中的动态参数
+
+通过 req.params 对象，可以访问到 URL 中，通过 **:** 匹配到的动态参数:
+
+````
+app.get('/user/:id/:username', (req, res) => {
+  // req.params 是动态匹配到的 URL 参数，默认也是一个空对象
+  console.log(req.params)
+  res.send(req.params)
+})
+
+````
+
+1.3 托管静态资源
+
+1. express.static()
+
+express 提供了一个非常好用的函数，叫做 express.static()，通过它，我们可以非常方便地创建一个静态资源服务器，
+
+例如，通过如下代码就可以将 public 目录下的图片、CSS 文件、JavaScript 文件对外开放访问了:
+
+````
+app.use(express.static('pubilc'))
+````
+
+现在，你就可以访问 public 目录中的所有文件了: 
+
+http://localhost:3000/images/bg.jpg
+http://localhost:3000/css/style.css
+http://localhost:3000/js/login.js 
+
+> **注意:**Express 在指定的静态目录中查找文件，并对外提供资源的访问路径。因此，存放静态文件的目录名不会出现在 URL 中。
+
+2. 托管多个静态资源目录
+
+如果要托管多个静态资源目录，请多次调用 express.static() 函数:
+
+````
+app.use(express.static('pubilc'))
+app.use(express.static('files'))
+````
+
+访问静态资源文件时，express.static() 函数会根据目录的添加顺序查找所需的文件。
+
+3. 挂载路径前缀
+
+如果希望在托管的静态资源访问路径之前，挂载路径前缀，则可以使用如下的方式:
+
+````
+app.use('/pubilc', express.static('files'))
+````
+
+现在，你就可以通过带有 /public 前缀地址来访问 public 目录中的文件了: 
+
+http://localhost:3000/public/images/kitten.jpg
+http://localhost:3000/public/css/style.css
+http://localhost:3000/public/js/app.js
+
+1.4 nodemon
+
+1. 为什么要使用 nodemon
+
+在编写调试 Node.js 项目的时候，如果修改了项目的代码，则需要频繁的手动 close 掉，然后再重新启动，非常繁琐。
+
+现在，我们可以使用 nodemon(https://www.npmjs.com/package/nodemon) 这个工具，它能够监听项目文件 的变动，当代码被修改后，nodemon 会自动帮我们重启项目，极大方便了开发和调试。
+
+2. 安装 nodemon
+
+在终端中，运行如下命令，即可将 nodemon 安装为全局可用的工具:
+
+````
+npm install -g nodemon
+````
+
+3. 使用 nodemon
+
+当基于 Node.js 编写了一个网站应用的时候，传统的方式，是运行 node app.js 命令，来启动项目。这样做的坏处是:
+代码被修改之后，需要手动重启项目。
+
+现在，我们可以将 node 命令替换为 nodemon 命令，使用 nodemon app.js 来启动项目。这样做的好处是:代码 被修改之后，会被 nodemon 监听到，从而实现自动重启项目的效果。
+
+````
+nodemon app.js
+````
+
+### Express 路由
+
+2.1 路由的概念
+
+1. 什么是路由
+
+广义上来讲，路由就是**映射关系**。
+
+2. 现实生活中的路由
+
+在这里，路由是按键与服务之间的**映射关系**
+
+3. Express 中的路由
+
+在 Express 中，路由指的是**客户端的请求**与**服务器处理函数**之间的映射关系。
+Express 中的路由分 3 部分组成，分别是**请求的类型**、**请求的 URL 地址**、**处理函数**，格式如下:
+
+4. Express 中的路由的例子
+
+5. 路由的匹配过程
+
+每当一个请求到达服务器之后，**需要先经过路由的匹配**，只有匹配成功之后，才会调用对应的处理函数。
+
+在匹配时，会按照路由的顺序进行匹配，如果**请求类型**和**请求的 URL** 同时匹配成功，则 Express 会将这次请求，转 交给对应的 function 函数进行处理。
+
+#### 2.2 路由的使用
+
+1. 最简单的用法
+
+在 Express 中使用路由最简单的方式，就是把路由挂载到 app 上，示例代码如下:
+
+````
+const express = require('express')
+const app = express()
+
+//挂载路由
+app.get('/', (req, res) => { res.send('Hello World.') })
+app.post('/', (req, res) => { res.send('Post Request.') })
+
+// 启动 web 服务器
+app.listen(80, () => { console.log('server running at http://127.0.0.1')})
+````
+
+2. 模块化路由
+
+为了方便对路由进行模块化的管理，Express **不建议**将路由直接挂载到 app 上，而是推荐将路由抽离为单独的模块。 将路由抽离为单独模块的步骤如下:
+
+（1）创建路由模块对应的 .js 文件
+（2）调用 **express.Router()** 函数创建路由对象
+（3）向路由对象上挂载具体的路由
+（4）使用 **module.exports** 向外共享路由对象
+（5）使用 **app.use()** 函数注册路由模块
+
+3. 创建路由模块
+
+````
+// 这是路由模块
+// 1. 导入 express
+const express = require('express')
+// 2. 创建路由对象
+const router = express.Router()
+
+// 3. 挂载具体的路由
+router.get('/user/list', (req, res) => {
+  res.send('Get user list')
+})
+router.post('/user/add', (req, res) => {
+  res.send('Add new user')
+})
+
+// 4. 向外导出路由对象
+module.exports = router
+````
+
+4. 注册路由模块
+
+````
+// 1. 导入路由模块
+const router = require('router.js')
+// 2. 注册路由模块
+app.use(router)
+````
+
+5. 为路由模块添加前缀
+
+类似于托管静态资源时，为静态资源统一挂载访问前缀一样，路由模块添加前缀的方式也非常简单:
+
+````
+// 1. 导入路由模块
+const router = require('./04.router')
+// 2. 注册路由模块，并添加统一的访问前缀 /api
+app.use('/api', router)
+````
+
+
+### Express 中间件
+
+3.1 中间件的概念
+
+1. 什么是中间件
+
+中间件(Middleware )，特指业务流程的中间**处理环节**。
+
+2. 现实生活中的例子
+
+在处理污水的时候，一般都要经过**三个处理环节**，从而保证处理过后的废水，达到排放标准。
+
+处理污水的这三个中间处理环节，就可以叫做中间件。
+
+3. Express 中间件的调用流程
+
+当一个请求到达 Express 的服务器之后，可以连续调用多个中间件，从而对这次请求进行**预处理**。
+
+4. Express** 中间件的格式
+
+Express 的中间件，**本质**上就是一个 **function** **处理函数**，Express 中间件的格式如下:
+
+> 注意:中间件函数的形参列表中，**必须包含 next 参数**。而路由处理函数中只包含 req 和 res。
+
+5. next 函数的作用
+
+**next** **函数**是实现多个中间件连续调用的关键，它表示把流转关系转交给下一个中间件或路由。
+
+#### 3.2 Express 中间件的初体验
+
+1. 定义中间件函数
+
+可以通过如下的方式，定义一个最简单的中间件函数:
+
+````
+// 定义一个最简单的中间件函数
+const mw = function(req, res, next) {
+  console.log('这是最简单的中间件')
+  // 把流转关系，转交给下一个中间件或路由
+  next()
+}
+````
+
+2. 全局生效的中间件
+
+客户端发起的**任何请求**，到达服务器之后，**都会触发的中间件**，叫做全局生效的中间件。 通过调用 **app.use**(中间件函数)，即可定义一个**全局生效**的中间件，示例代码如下:
+
+````
+// 将 mw 注册为全局生效的中间件
+app.use(mw)
+````
+
+3. 定义全局中间件的简化形式
+
+````
+app.use((req, res, next) => {
+  console.log('这是最简单的中间件')
+  next()
+})
+````
+
+4. 中间件的作用
+
+多个中间件之间，**共享同一份** **req** **和** **res**。基于这样的特性，我们可以在**上游**的中间件中，**统一**为 req 或 res 对象添加自定义的属性或方法，供**下游**的中间件或路由进行使用。
+
+5. 定义多个全局中间件
+
+可以使用 app.use() **连续定义多个**全局中间件。客户端请求到达服务器之后，会按照中间件定义的先后顺序依次进行 调用，示例代码如下:
+
+````
+app.use((req, res, next) => {
+  console.log('调用第一个全局中间件');
+  next()
+})
+
+app.use((req, res, next) => {
+  console.log('调用第二个全局中间件');
+  next()
+})
+
+app.get('/user', (req, res) => {
+  res.send('user page')
+})
+````
+
+6. 局部生效的中间件
+
+**不使用** app.use() 定义的中间件，叫做**局部生效的中间件**，示例代码如下:
+
+````
+const mw1 = (req, res, next) => {
+  console.log('调用局部生效的中间件');
+  next()
+}
+
+app.get('/', mw1, (req, res) => {
+  res.send('home page')
+})
+
+app.get('/user', (req, res) => {
+  res.send('user page')
+})
+````
+
+7. 定义多个局部中间件
+
+可以在路由中，通过如下两种等价的方式，使用多个局部中间件:
+
+````
+app.get('/', mw1, mw2, (req, res) => {
+  res.send('home page')
+})
+app.get('/', [mw1, mw2], (req, res) => {
+  res.send('home page')
+})
+````
+
+8. 了解中间件的5个使用注意事项
+
+（1）一定要在**路由之前**注册中间件
+（2）客户端发送过来的请求，**可以连续调用多个**中间件进行处理
+（3）执行完中间件的业务代码之后，**不要忘记调用 next() 函数**
+（4）为了**防止代码逻辑混乱**，调用 next() 函数后不要再写额外的代码
+（5）连续调用多个中间件时，多个中间件之间，**共享** req 和 res 对象
+
+
+
+
+
+### 使用 Express 写接口
+
+
+
