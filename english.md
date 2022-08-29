@@ -178,4 +178,4 @@ Personal preference UI front-end direction using SASS structure layout, using VU
 
  \6. 您离职的原因是什么？――这是必须要问的问题，涉及员工和组织的融合性。 
 
- \7. 您对薪金待遇和福利有什么要求？――这个问题的重要性更是不必多言。
+ \7. 您对薪金待遇和福利有什么要求？――这个问题的重要性更是不必多言。****
