@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input type="text" />
+    <h1></h1>
+    <button>按钮</button>
+  </div>
+</body>
+<script>
+  // ES5方法
+  // // 定义 dom与变量
+  const input = document.getElementsByTagName('input')[0]
+  const h1 = document.getElementsByTagName('h1')[0]
+  const btn = document.getElementsByTagName('button')[0]
+  // var data = { text: '' }
+  
+  // // 赋值
+  // input.addEventListener('input', function (e) {
+  //   data.text = e.target.value
+  // })
+
+  // btn.onclick = function () {
+  //   data.text = '你好'
+  // }
+  // // 监听数据
+  // Object.defineProperty(data, 'text', {
+  //   get: function () {
+  //     return data['text']
+  //   },
+  //   set: function (newValue) {
+  //     h1.innerText = newValue
+  //     input.value = newValue
+  //   }
+  // })
+
+  const data = { text: '' }
+  function effect () {
+    document.body.innerText = data.text
+  }
+  // effect()
+  // data.text = '你好'
+
+  // ES6方法
+  const obj = new Proxy(data, {
+    get(target, key) {
+      return target[key]
+    },
+    set(target, key, newValue) {
+      target[key] = newValue
+      effect()
+      return true
+    }
+  })
+  btn.onclick = function () {
+    obj.text = '你好'
+  }
+
+</script>
+</html>
