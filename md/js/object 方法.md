@@ -121,3 +121,17 @@ Reflect.ownKeys(obj).forEach(item => {
 
 
 
+#### Object.create
+
+方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+
+语法:Object.create(proto, [propertiesObject])
+
+- proto：新创建对象的原型对象。
+- propertiesObject：可选
+
+````js
+const oldObjectProto = Object.prototype				// 重新定义对象原型
+const newObjectProto = Object.create(oldObjectProto)			// 创建新对象，原型指向 newObjectProto, 不会影响原型
+````
+

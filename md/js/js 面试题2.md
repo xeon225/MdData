@@ -140,4 +140,52 @@ Function 是所有函数的爸爸，所有函数都可以通过 __proto__ 找到
 
 对象的 __proto__ 属性指向原型， __proto__ 将对象和原型连接起来组成了原型链
 
+#### 循环中断
+
+**for 循环**
+brerk 退出循环
+continue 退出当前循环，继续执行循环
+
+> for 不能有 return
+
+forEach
+
+return 退出当前循环，继续执行循环
+try catch 退出本次循环
+
+````js
+let arr = [1, 2, 3] 
+try {
+   arr.forEach(item => {
+     if (item === 2) {
+       throw('退出循环')
+     }
+     console.log(item)
+   })
+ } catch(e) {
+   console.log(e,'e')
+ }
+// 1
+// 退出循环
+````
+
+
+
+> forEach 不能有 brerk、continue
+
+**总结**
+
+允许使用`break` & `continue`，不使用`return`：
+
+- for循环
+- for...in（`break` & `continue`对遍历无影响）
+- for...of
+- while
+- do...while
+
+允许使用`return`，不使用`break` & `continue`：
+
+- forEach
+- Array.map
+- for...in（node环境中允许使用，但对遍历无影响）
 
